@@ -2,11 +2,17 @@ let circleColor;
 let previousKey = null;
 let keyStates = {};
 
+//todo: mode select with num keys
+let currentMode = 0;
+
+
+// Initializing the canvas
 function setup() {
   createCanvas(1000, 800);
   circleColor = color(255);
 }
 
+// draw loop (runs every frame)
 function draw() {
   handleKeyPress()
   background(0);
@@ -15,21 +21,8 @@ function draw() {
 }
 
 function handleKeyPress() {
+  // handle the key presses
   let currentKey = null;
-
-  // handling key presses
-    // if (keyIsDown(65)) { // A (weak)
-    //   currentKey = 'a';
-    //   circleColor = color(0, 255, 0);
-    // } else if (keyIsDown(83)) { // S (mid)
-    //   currentKey = 's';
-    //   circleColor = color(0, 0, 255);
-    // } else if (keyIsDown(87)) { // W (strong)
-    //   currentKey = 'w';
-    //   circleColor = color(255, 0, 0);
-    // } else {
-    //   circleColor = color(255);
-    // }
     if (keyStates[65]) { // A (weak)
       currentKey = 'a';
       circleColor = color(0, 255, 0);
@@ -56,7 +49,7 @@ function handleKeyPress() {
       } else if (currentKey === 'w') {
         console.log('W --> strong punch')
       } else {
-        console.log('-')
+        console.log('------------------')
       }
       previousKey = currentKey;
     }
@@ -67,7 +60,6 @@ function handleKeyPress() {
   function keyPressed() {
     keyStates[keyCode] = true;
   }
-  
   function keyReleased() {
     keyStates[keyCode] = false;
   }
