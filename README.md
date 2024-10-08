@@ -1,4 +1,4 @@
-# Light is Matter project
+# Light as Matter project
 
 <ins>How to use:</ins>
 - install [Live Server](https://marketplace.visualstudio.com/items?itemName=ritwickdey.LiveServer) extension and press "Go Live"
