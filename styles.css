@@ -2,13 +2,13 @@ body {
     background-color: black;
 }
 
-/* Default p5js canvas*/
+/* Default p5js canvas, no idea why its named like that*/
 #defaultCanvas0{ 
     position:absolute;
     top: 50%;
     left: 50%;
     transform: translate(-50%, -45%);
-    border: 2px solid white; /* Add white border */
+    border: 2px solid white;
 }
 
 #custom-console {

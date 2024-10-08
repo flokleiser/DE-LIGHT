@@ -1,5 +1,5 @@
 # Light is Matter project
 
-How to use:
-    - install LiveServer extension and press "Go Live"
-    - or paste "script.js" into p5js.editor / openProcessing.com
+<ins>How to use:</ins>
+- install LiveServer extension and press "Go Live"
+- or copy paste "script.js" into either online editor: [p5js](editor.p5js.org) / [openProcessing](openProcessing.com)
