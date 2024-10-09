@@ -1,6 +1,6 @@
 let circleColor;
 let targetColor
-let circleRadius1 = 250;
+let circleRadius1 = 250; // at 60 cm distance perfect
 let targetRadius = 250;
 let lerpAmount = 0.5;
 let previousKey = null;
@@ -25,7 +25,17 @@ function draw() {
   circleColor = lerpColor(circleColor, targetColor, lerpAmount);
   circleRadius1 = lerp(circleRadius1, targetRadius, lerpAmount);
   fill(circleColor);
+
+
+ if (currentMode === 1) {
   ellipse(width / 2, height / 2, circleRadius1, circleRadius1);
+ }
+ else if (currentMode === 2) {
+  ellipse(width / 4, height / 4, circleRadius1, circleRadius1);
+  ellipse((width / 4)*3, (height / 4 * 3), circleRadius1, circleRadius1);
+  ellipse((width / 4)*3, height / 4 , circleRadius1, circleRadius1);
+  ellipse(width / 4, (height / 4)*3  , circleRadius1, circleRadius1);
+ }
 
   textAlign(CENTER);
   textSize(16);
@@ -66,7 +76,6 @@ function handleKeyPress() {
     }
   } else if (currentMode === 2) {
     // testing different mode
-    console.log('mode 2, nothing works')
   }
 
     if (currentKey !== previousKey) {
