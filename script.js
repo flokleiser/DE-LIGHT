@@ -1,3 +1,7 @@
+//TODO: figure out how to map right click to key, and preventDefault()
+
+
+
 //circle 1
 let circleColor1;
 let targetColor1;
@@ -25,8 +29,8 @@ let targetRadius4 = 250;
 //big circle 1
 let circleColorBig1;
 let targetColorBig1;
-let circleRadiusBig1 = 400; 
-let targetRadiusBig1 = 400;
+let circleRadiusBig1 = 525; 
+let targetRadiusBig1 = 525;
 
 let lerpAmount = 0.5;
 let previousKey = null;
@@ -35,7 +39,7 @@ let keyStates = {};
 let currentMode = 1;
 
 function setup() {
-  createCanvas(1000, 800);
+  createCanvas(1120, 865);
   circleColor1 = color(255);
   targetColor1 = color(255)
 
@@ -55,6 +59,11 @@ function setup() {
 function draw() {
   handleKeyPress()
   background(0);
+
+  // stroke(255, 255, 255)
+  // fill(0);
+  // rect(75,75,(canvas.width-150), (canvas.height-150));
+
   circleColor1 = lerpColor(circleColor1, targetColor1, lerpAmount);
   circleRadius1 = lerp(circleRadius1, targetRadius1, lerpAmount);
   circleColor2 = lerpColor(circleColor2, targetColor2, lerpAmount);
@@ -75,16 +84,17 @@ function draw() {
 
  else if (currentMode === 2) { // four circles
   // fill(circleColor2);
-  ellipse(width / 4, height / 4, circleRadius1, circleRadius1);
-  ellipse(width / 4, (height / 4)*3  , circleRadius2, circleRadius2);
-  ellipse((width / 4)*3, height / 4 , circleRadius4, circleRadius4);
-  ellipse((width / 4)*3, (height / 4 * 3), circleRadius3, circleRadius3);
+  ellipse(width / 6.5, height / 4.75, circleRadius1, circleRadius1);
+  ellipse(width / 6.5, (height / 4.75)*3.75  , circleRadius2, circleRadius2);
+  ellipse((width / 6.5)*5.5, height / 4.75 , circleRadius4, circleRadius4);
+  ellipse((width / 6.5)*5.5, (height / 4.75)*3.75, circleRadius3, circleRadius3);
  }
 
  else if (currentMode === 3) {
 
   // fill(circleColor1)
-  ellipse(width / 5, height / 4, circleRadius1, circleRadius1);
+  // ellipse(width / 8 * 7, height / 5, circleRadius1, circleRadius1);
+  ellipse(width / 6.5 * 5.5, height / 4.75, circleRadius1, circleRadius1);
   ellipse(width / 2, height / 2, circleRadiusBig1, circleRadiusBig1);
  }
 
@@ -238,7 +248,7 @@ function handleKeyPress() {
       targetColor1 = color(255);
       targetRadius1 = 250;
       targetColorBig1 = color(255);
-      targetRadiusBig1 = 400;
+      targetRadiusBig1 = 525;
     }
   }
 
