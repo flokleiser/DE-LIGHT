@@ -40,6 +40,19 @@ let currentMode = 1;
 
 function setup() {
   createCanvas(1120, 865);
+
+  canvas.addEventListener('contextmenu', (e) => {
+    e.preventDefault();
+    keyStates[3] = true;
+    handleKeyPress();
+  });
+
+  canvas.addEventListener('mouseup', (e) => {
+    if (e.button === 2) {
+      keyStates[3] = false;
+    }
+  });
+
   circleColor1 = color(255);
   targetColor1 = color(255)
 
@@ -88,6 +101,9 @@ function draw() {
   ellipse(width / 6.5, (height / 4.75)*3.75  , circleRadius2, circleRadius2);
   ellipse((width / 6.5)*5.5, height / 4.75 , circleRadius4, circleRadius4);
   ellipse((width / 6.5)*5.5, (height / 4.75)*3.75, circleRadius3, circleRadius3);
+
+  ellipse(width / 2, height / 2, circleRadiusBig1, circleRadiusBig1);
+
  }
 
  else if (currentMode === 3) {
@@ -143,7 +159,7 @@ function handleKeyPress() {
 
 
 
-  } else if (currentMode === 2) { //four bags
+  } else if (currentMode === 2) { //five bags
     //FIRST PUNCHING BAG
     if (keyStates[65]) { // A (weak)
       currentKey = 'a';
@@ -212,7 +228,14 @@ function handleKeyPress() {
       targetRadius4 = 375;
     }
 
-    if (!keyStates[65] && !keyStates[83] && !keyStates[87] &&! keyStates[70] && !keyStates[71] && !keyStates[68]  &&! keyStates[38] && !keyStates[40] && !keyStates[37] && !keyStates[39] && !keyStates[32] &&! keyStates[82]) { //set to white otherwise
+    //MIDDLE PUNCHING BAG
+    if (keyStates[3]) { // Right-click (simulated key code 3)
+      currentKey = 'right-click';
+      targetColorBig1 = color(255, 0, 0); 
+      targetRadiusBig1 = 555;
+    }
+
+    if (!keyStates[65] && !keyStates[83] && !keyStates[87] &&! keyStates[70] && !keyStates[71] && !keyStates[68]  &&! keyStates[38] && !keyStates[40] && !keyStates[37] && !keyStates[39] && !keyStates[32] &&! keyStates[82] &&! keyStates[3]) { //set to white otherwise
       targetColor1 = color(255);
       targetRadius1 = 250;
       targetColor2 = color(255);
@@ -221,6 +244,8 @@ function handleKeyPress() {
       targetRadius3 = 250;
       targetColor4 = color(255);
       targetRadius4 = 250;
+      targetRadiusBig1 = 525;
+      targetColorBig1 = color(255);
     }
   } else if (currentMode === 3) { //two bags
     if (keyStates[65]) { // A (weak)
@@ -252,6 +277,8 @@ function handleKeyPress() {
     }
   }
 
+
+  //console.log messages
   if (currentMode === 1) { // once circle, colored
     if (currentKey !== previousKey) {
       if (currentKey === 'a') {
@@ -266,7 +293,6 @@ function handleKeyPress() {
       previousKey = currentKey;
     }
   }
-
   if (currentMode === 2) { // four circles, sized
     if (currentKey !== previousKey) {
       if (currentKey === 'a') {
@@ -293,6 +319,8 @@ function handleKeyPress() {
         console.log('PunchThing 4 --> mid punch')
       } else if (currentKey === 'R/mouse pressed') {
         console.log('PunchThing 4 --> strong punch')
+      } else if (currentKey === 'right-click') {
+        console.log('PunchThing Middle --> punch')
       }
       else {
         console.log('------------------')
@@ -321,11 +349,15 @@ function handleKeyPress() {
 
   // converting mouse to r
   function mousePressed() {
-    keyStates[82] = true;
-    handleKeyPress();
+    if (mouseButton === LEFT) {
+      keyStates[82] = true;
+      handleKeyPress();
+    }
   }
   function mouseReleased() {
-    keyStates[82] = false;
+    if (mouseButton === LEFT) {
+      keyStates[82] = false;
+    }
   }
   
 
