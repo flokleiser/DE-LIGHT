@@ -7,20 +7,26 @@ let targetRadius1 = 250;
 //circle 2
 let circleColor2;
 let targetColor2;
-let circleRadius2 = 250; // at 60 cm distance perfect
+let circleRadius2 = 250; 
 let targetRadius2 = 250;
 
 //circle 3
 let circleColor3;
 let targetColor3;
-let circleRadius3 = 250; // at 60 cm distance perfect
+let circleRadius3 = 250; 
 let targetRadius3 = 250;
 
 //circle 4 
 let circleColor4;
 let targetColor4;
-let circleRadius4 = 250; // at 60 cm distance perfect
+let circleRadius4 = 250; 
 let targetRadius4 = 250;
+
+//big circle 1
+let circleColorBig1;
+let targetColorBig1;
+let circleRadiusBig1 = 400; 
+let targetRadiusBig1 = 400;
 
 let lerpAmount = 0.5;
 let previousKey = null;
@@ -28,7 +34,6 @@ let keyStates = {};
 
 let currentMode = 1;
 
-// Initializing the canvas
 function setup() {
   createCanvas(1000, 800);
   circleColor1 = color(255);
@@ -42,9 +47,11 @@ function setup() {
 
   circleColor4 = color(255);
   targetColor4 = color(255)
+
+  circleColorBig1 = color(255);
+  targetColorBig1 = color(255)
 }
 
-// draw loop (runs every frame)
 function draw() {
   handleKeyPress()
   background(0);
@@ -56,6 +63,9 @@ function draw() {
   circleRadius3 = lerp(circleRadius3, targetRadius3, lerpAmount);
   circleColor4 = lerpColor(circleColor4, targetColor4, lerpAmount);
   circleRadius4 = lerp(circleRadius4, targetRadius4, lerpAmount);
+
+  circleColorBig1 = lerpColor(circleColorBig1, targetColorBig1, lerpAmount);
+  circleRadiusBig1 = lerp(circleRadiusBig1, targetRadiusBig1, lerpAmount);
 
 
  if (currentMode === 1) { // only one circle
@@ -69,6 +79,13 @@ function draw() {
   ellipse(width / 4, (height / 4)*3  , circleRadius2, circleRadius2);
   ellipse((width / 4)*3, height / 4 , circleRadius4, circleRadius4);
   ellipse((width / 4)*3, (height / 4 * 3), circleRadius3, circleRadius3);
+ }
+
+ else if (currentMode === 3) {
+
+  // fill(circleColor1)
+  ellipse(width / 5, height / 4, circleRadius1, circleRadius1);
+  ellipse(width / 2, height / 2, circleRadiusBig1, circleRadiusBig1);
  }
 
   textAlign(CENTER);
@@ -86,6 +103,9 @@ function handleKeyPress() {
   } else if (keyStates[50]) {
     currentMode = 2;
     console.log('Mode 2');
+  } else if (keyStates[51]) {
+    currentMode = 3;
+    console.log('Mode 3');
   }
 
 
@@ -113,7 +133,7 @@ function handleKeyPress() {
 
 
 
-  } else if (currentMode === 2) {
+  } else if (currentMode === 2) { //four bags
     //FIRST PUNCHING BAG
     if (keyStates[65]) { // A (weak)
       currentKey = 'a';
@@ -192,9 +212,37 @@ function handleKeyPress() {
       targetColor4 = color(255);
       targetRadius4 = 250;
     }
+  } else if (currentMode === 3) { //two bags
+    if (keyStates[65]) { // A (weak)
+      currentKey = 'a';
+      targetColor1 = color(238, 210, 2);
+      targetRadius1 = 275;
+    } 
+    if (keyStates[83]) { // S (mid)
+      currentKey = 's';
+      targetColor1 = color(255, 102, 0);
+      targetRadius1 = 325;
+    } 
+    if (keyStates[87]) { // W (strong)
+      currentKey = 'w';
+      targetColor1 = color(255, 0, 0);
+      targetRadius1 = 375;
+    }
+        //big bag
+    if (keyStates[68]) { // Big bag
+      currentKey = 'd';
+      targetColorBig1= color(238, 210, 2);
+      targetRadiusBig1 = 425;
+    }
+    if (!keyStates[65] && !keyStates[83] && !keyStates[87]&& !keyStates[68]) { //set to white otherwise
+      targetColor1 = color(255);
+      targetRadius1 = 250;
+      targetColorBig1 = color(255);
+      targetRadiusBig1 = 400;
+    }
   }
 
-  if (currentMode === 1) {
+  if (currentMode === 1) { // once circle, colored
     if (currentKey !== previousKey) {
       if (currentKey === 'a') {
         console.log('A --> weak punch')
@@ -209,7 +257,7 @@ function handleKeyPress() {
     }
   }
 
-  if (currentMode === 2) {
+  if (currentMode === 2) { // four circles, sized
     if (currentKey !== previousKey) {
       if (currentKey === 'a') {
         console.log('PunchThing 1 --> weak punch')
@@ -242,8 +290,26 @@ function handleKeyPress() {
       previousKey = currentKey;
     }
   }
+  if (currentMode === 3) { // one big one small 
+    if (currentKey !== previousKey) {
+      if (currentKey === 'a') {
+        console.log('PunchThing 1 --> weak punch')
+      } else if (currentKey === 's') {
+        console.log('PunchThing 1 --> mid punch')
+      } else if (currentKey === 'w') {
+        console.log('PunchThing 1 --> strong punch')
+      } else if (currentKey === 'd') {
+        console.log('PunchThing Big')
+      }
+      else {
+        console.log('------------------')
+      }
+      previousKey = currentKey;
+    }
+  }
   }
 
+  // converting mouse to r
   function mousePressed() {
     keyStates[82] = true;
     handleKeyPress();
@@ -253,6 +319,7 @@ function handleKeyPress() {
   }
   
 
+  // checking which keys are pressed
   function keyPressed() {
     keyStates[keyCode] = true;
   }
