@@ -66,9 +66,9 @@ function draw() {
  else if (currentMode === 2) { // four circles
   // fill(circleColor2);
   ellipse(width / 4, height / 4, circleRadius1, circleRadius1);
-  ellipse((width / 4)*3, (height / 4 * 3), circleRadius2, circleRadius2);
-  ellipse((width / 4)*3, height / 4 , circleRadius3, circleRadius3);
-  ellipse(width / 4, (height / 4)*3  , circleRadius4, circleRadius4);
+  ellipse(width / 4, (height / 4)*3  , circleRadius2, circleRadius2);
+  ellipse((width / 4)*3, height / 4 , circleRadius4, circleRadius4);
+  ellipse((width / 4)*3, (height / 4 * 3), circleRadius3, circleRadius3);
  }
 
   textAlign(CENTER);
@@ -116,63 +116,73 @@ function handleKeyPress() {
   } else if (currentMode === 2) {
     //FIRST PUNCHING BAG
     if (keyStates[65]) { // A (weak)
+      currentKey = 'a';
       targetColor1 = color(238, 210, 2);
       targetRadius1 = 275;
     } 
     if (keyStates[83]) { // S (mid)
+      currentKey = 's';
       targetColor1 = color(255, 102, 0);
       targetRadius1 = 325;
     } 
     if (keyStates[87]) { // W (strong)
+      currentKey = 'w';
       targetColor1 = color(255, 0, 0);
       targetRadius1 = 375;
     }
 
     //SECOND PUNCHING BAG
     if (keyStates[70]) { // F (weak)
+      currentKey = 'f';
       targetColor2 = color(238, 210, 2);
       targetRadius2 = 275;
     } 
     if (keyStates[71]) { // G (mid)
+      currentKey = 'g';
       targetColor2 = color(255, 102, 0);
       targetRadius2 = 325;
     } 
     if (keyStates[68]) { // D (strong)
+      currentKey = 'd';
       targetColor2 = color(255, 0, 0);
       targetRadius2 = 375;
     }
 
     //THIRD PUNCHING BAG
     if (keyStates[38]) { // arrow up (weak)
+      currentKey = 'arrow up';
       targetColor3 = color(238, 210, 2);
       targetRadius3 = 275;
     } 
     if (keyStates[40]) { // arrow down (mid)
+      currentKey = 'arrow down';
       targetColor3 = color(255, 102, 0);
       targetRadius3 = 325;
     } 
     if (keyStates[37]) { // arrow left (strong)
+      currentKey = 'arrow left';
       targetColor3 = color(255, 0, 0);
       targetRadius3 = 375;
     }
 
     //FOURTH PUNCHING BAG
     if (keyStates[39]) { // arrow right(weak)
+      currentKey = 'arrow right';
       targetColor4 = color(238, 210, 2);
       targetRadius4 = 275;
     } 
     if (keyStates[32]) { // spacebar (mid)
+      currentKey = 'spacebar';
       targetColor4 = color(255, 102, 0);
       targetRadius4 = 325;
     } 
-    //idk how to make this mouse click
-    // if (keyStates[37]) { // arrow left (strong)
-    //   targetColor3 = color(255, 0, 0);
-    //   targetRadius3 = 375;
-    // }
+    if (keyStates[82]) { // R/mouse pressed (mid)
+      currentKey = 'R/mouse pressed';
+      targetColor4 = color(255, 0, 0);
+      targetRadius4 = 375;
+    }
 
-
-    if (!keyStates[65] && !keyStates[83] && !keyStates[87] &&! keyStates[70] && !keyStates[71] && !keyStates[68]  &&! keyStates[38] && !keyStates[40] && !keyStates[37] && !keyStates[39] && !keyStates[32]) { //set to white otherwise
+    if (!keyStates[65] && !keyStates[83] && !keyStates[87] &&! keyStates[70] && !keyStates[71] && !keyStates[68]  &&! keyStates[38] && !keyStates[40] && !keyStates[37] && !keyStates[39] && !keyStates[32] &&! keyStates[82]) { //set to white otherwise
       targetColor1 = color(255);
       targetRadius1 = 250;
       targetColor2 = color(255);
@@ -199,8 +209,49 @@ function handleKeyPress() {
     }
   }
 
+  if (currentMode === 2) {
+    if (currentKey !== previousKey) {
+      if (currentKey === 'a') {
+        console.log('PunchThing 1 --> weak punch')
+      } else if (currentKey === 's') {
+        console.log('PunchThing 1 --> mid punch')
+      } else if (currentKey === 'w') {
+        console.log('PunchThing 1 --> strong punch')
+      } else if (currentKey === 'f') {
+        console.log('PunchThing 2 --> weak punch')
+      } else if (currentKey === 'g') {
+        console.log('PunchThing 2 --> mid punch')
+      } else if (currentKey === 'd') {
+        console.log('PunchThing 2 --> strong punch')
+      } else if (currentKey === 'arrow up') {
+        console.log('PunchThing 3 --> weak punch')
+      } else if (currentKey === 'arrow down') {
+        console.log('PunchThing 3 --> mid punch')
+      } else if (currentKey === 'arrow left') {
+        console.log('PunchThing 3 --> strong punch')
+      } else if (currentKey === 'arrow right') {
+        console.log('PunchThing 4 --> weak punch')
+      } else if (currentKey === 'spacebar') {
+        console.log('PunchThing 4 --> mid punch')
+      } else if (currentKey === 'R/mouse pressed') {
+        console.log('PunchThing 4 --> strong punch')
+      }
+      else {
+        console.log('------------------')
+      }
+      previousKey = currentKey;
+    }
+  }
   }
 
+  function mousePressed() {
+    keyStates[82] = true;
+    handleKeyPress();
+  }
+  function mouseReleased() {
+    keyStates[82] = false;
+  }
+  
 
   function keyPressed() {
     keyStates[keyCode] = true;
