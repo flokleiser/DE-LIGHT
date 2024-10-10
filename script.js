@@ -1,11 +1,9 @@
-//to implement--> background opacity at start of draw loop
-//to implement--> own functions for circles
-
 //circle 1
 let circleColor1;
 let targetColor1;
 let circleRadius1 = 250; // at 60 cm distance perfect
 let targetRadius1 = 250;
+let transitionRadius = 10000
 
 //circle 2
 let circleColor2;
@@ -37,7 +35,9 @@ let keyStates = {};
 
 let currentMode = 0;
 let selectedMode = 0
-let start = false;
+
+let fading = false
+let fadingTimer = 0
 
 function setup() {
     createCanvas(1120, 865);
@@ -72,86 +72,12 @@ function setup() {
 }
 
 function draw() {
+
+	// background(0,0,0, 50);
+	background(0);
     handleKeyPress();
-    background(0);
-    initPunchingBags();
 
-    if (currentMode === 0) {
-        //MENU
-        fill(255);
-        drawPunchingBags();
-
-        //menu texts
-        fill(0);
-        textSize(32);
-        textAlign(CENTER, CENTER);
-        textSize(circleRadiusBig / 2);
-        text("▶", width / 2 + 20, height / 2 + 20);
-        textSize(circleRadius1 / 4);
-        text("Mode 1", width / 6.5, height / 4.75);
-        textSize(circleRadius2 / 4);
-        text("Mode 2", width / 6.5, (height / 4.75) * 3.75);
-        textSize(circleRadius3 / 4);
-        text("Mode 3", (width / 6.5) * 5.5, (height / 4.75) * 3.75);
-        textSize(circleRadius4 / 4);
-        text("Mode 4", (width / 6.5) * 5.5, height / 4.75);
-
-    } else if (currentMode === 1) {
-        // four circles
-        fill(circleColor1);
-        ellipse(width / 6.5, height / 4.75, circleRadius1, circleRadius1);
-        fill(circleColor2);
-        ellipse(
-            width / 6.5,
-            (height / 4.75) * 3.75,
-            circleRadius2,
-            circleRadius2
-        );
-        fill(circleColor3);
-        ellipse(
-            (width / 6.5) * 5.5,
-            (height / 4.75) * 3.75,
-            circleRadius3,
-            circleRadius3
-        );
-        fill(circleColor4);
-        ellipse(
-            (width / 6.5) * 5.5,
-            height / 4.75,
-            circleRadius4,
-            circleRadius4
-        );
-        fill(circleColorBig);
-        ellipse(width / 2, height / 2, circleRadiusBig, circleRadiusBig);
-
-    } else if (currentMode === 2) {
-		fill(255)
-        ellipse(
-            (width / 6.5) * 5.5,
-            height / 4.75,
-            circleRadius1,
-            circleRadius1
-        );
-        ellipse(width / 2, height / 2, circleRadiusBig, circleRadiusBig);
-    } else if (currentMode === 3) {
-		//todo
-	} else if (currentMode === 4) {
-		fill(255)
-		drawPunchingBags();
-		fill(0)
-		textSize(circleRadius2 / 4);
-        text("Exit", width / 6.5, (height / 4.75) * 3.75);
-		textSize(circleRadius3 / 4);
-        text("Exit", (width / 6.5) * 5.5, (height / 4.75) * 3.75);
-	
-
-	}
-
-	
-}
-
-function initPunchingBags() {
-    circleColor1 = lerpColor(circleColor1, targetColor1, lerpAmount);
+	circleColor1 = lerpColor(circleColor1, targetColor1, lerpAmount);
     circleRadius1 = lerp(circleRadius1, targetRadius1, lerpAmount);
     circleColor2 = lerpColor(circleColor2, targetColor2, lerpAmount);
     circleRadius2 = lerp(circleRadius2, targetRadius2, lerpAmount);
@@ -159,9 +85,88 @@ function initPunchingBags() {
     circleRadius3 = lerp(circleRadius3, targetRadius3, lerpAmount);
     circleColor4 = lerpColor(circleColor4, targetColor4, lerpAmount);
     circleRadius4 = lerp(circleRadius4, targetRadius4, lerpAmount);
-
     circleColorBig = lerpColor(circleColorBig, targetColorBig, lerpAmount);
     circleRadiusBig = lerp(circleRadiusBig, targetRadiusBig, lerpAmount);
+
+    if (currentMode === 0) {
+		menu();
+    } else if (currentMode === 1) {
+		// transitionMode1();
+		fill(circleColor1);
+		ellipse(width / 6.5, height / 4.75, circleRadius1, circleRadius1);
+		circleRadius1 = lerp(circleRadius1, transitionRadius, 0.1);
+		// mode1();
+    } else if (currentMode === 2) {
+		mode2();
+    } else if (currentMode === 3) {
+		mode3();
+	} else if (currentMode === 4) {
+		mode4();
+	}
+	
+}
+
+
+function transitionMode1() {
+	fill(circleColor1);
+	ellipse(width / 6.5, height / 4.75, circleRadius1, circleRadius1);
+	circleRadius1 = lerp(circleRadius1, transitionRadius, 0.001);
+}
+
+function menu() {
+	fill(255);
+	drawPunchingBags();
+
+	//menu texts
+	fill(0);
+	textSize(32);
+	textAlign(CENTER, CENTER);
+	textSize(circleRadiusBig / 2);
+	text("▶", width / 2 + 20, height / 2 + 20);
+	textSize(circleRadius1 / 4);
+	text("Mode 1", width / 6.5, height / 4.75);
+	textSize(circleRadius2 / 4);
+	text("Mode 2", width / 6.5, (height / 4.75) * 3.75);
+	textSize(circleRadius3 / 4);
+	text("Mode 3", (width / 6.5) * 5.5, (height / 4.75) * 3.75);
+	textSize(circleRadius4 / 4);
+	text("Mode 4", (width / 6.5) * 5.5, height / 4.75);
+}
+function mode1() {
+	fill(circleColor1);
+	ellipse(width / 6.5, height / 4.75, circleRadius1, circleRadius1);
+	fill(circleColor2);
+	ellipse( width / 6.5, (height / 4.75) * 3.75, circleRadius2, circleRadius2 );
+	fill(circleColor3);
+	ellipse( (width / 6.5) * 5.5, (height / 4.75) * 3.75, circleRadius3, circleRadius3 );
+	fill(circleColor4);
+	ellipse( (width / 6.5) * 5.5, height / 4.75, circleRadius4, circleRadius4 );
+	fill(circleColorBig);
+	ellipse(width / 2, height / 2, circleRadiusBig, circleRadiusBig);
+}
+function mode2() {
+	fill(255)
+	ellipse( (width / 6.5) * 5.5, height / 4.75, circleRadius1, circleRadius1 );
+	ellipse(width / 2, height / 2, circleRadiusBig, circleRadiusBig);
+}
+function mode3() {
+	console.log('not implemented yet')
+	//todo
+}
+function mode4() {
+	fill(255)
+	drawPunchingBags();
+	fill(0)
+	textSize(circleRadius2 / 4);
+	text("Exit", width / 6.5, (height / 4.75) * 3.75);
+	textSize(circleRadius3 / 4);
+	text("Exit", (width / 6.5) * 5.5, (height / 4.75) * 3.75);
+}
+
+function initModeAnimation() {
+	clear()
+	fill(50)	
+	drawPunchingBags()
 }
 
 function drawPunchingBags() {
@@ -194,10 +199,11 @@ function handleKeyPress() {
     let currentKey = null;
 
     //SETTING MODES
-	// if (keyStates[48]) {
 	if (selectedMode != 0 && keyStates[48] || (keyStates[70] || keyStates[71] || keyStates[68]) && (keyStates[38] || keyStates[40] || keyStates[37])) {
 		currentMode = 0;
 		selectedMode = 0;
+		fading = false
+		fadingTimer = 0
 		console.log("Reset modes");
 	}
 	
@@ -218,6 +224,8 @@ function handleKeyPress() {
 	}
 
 	if (selectedMode != 0 && keyStates[3]) {
+		//todo: add animation here
+		// initModeAnimation();
 		currentMode = selectedMode;
 		console.log("Selected mode: " + currentMode);
 	}
