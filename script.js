@@ -1,7 +1,3 @@
-//TODO: figure out how to map right click to key, and preventDefault()
-
-
-
 //circle 1
 let circleColor1;
 let targetColor1;
@@ -73,10 +69,6 @@ function draw() {
   handleKeyPress()
   background(0);
 
-  // stroke(255, 255, 255)
-  // fill(0);
-  // rect(75,75,(canvas.width-150), (canvas.height-150));
-
   circleColor1 = lerpColor(circleColor1, targetColor1, lerpAmount);
   circleRadius1 = lerp(circleRadius1, targetRadius1, lerpAmount);
   circleColor2 = lerpColor(circleColor2, targetColor2, lerpAmount);
@@ -88,7 +80,6 @@ function draw() {
 
   circleColorBig1 = lerpColor(circleColorBig1, targetColorBig1, lerpAmount);
   circleRadiusBig1 = lerp(circleRadiusBig1, targetRadiusBig1, lerpAmount);
-
 
  if (currentMode === 1) { // only one circle
   fill(circleColor1);
@@ -120,7 +111,6 @@ function draw() {
 }
 
 function handleKeyPress() {
-  // handle the key presses
   let currentKey = null;
 
   if (keyStates[49]) {
@@ -134,32 +124,6 @@ function handleKeyPress() {
     console.log('Mode 3');
   }
 
-
-
-  if (currentMode === 1) { // first mode
-    if (keyStates[65]) { // A (weak)
-      currentKey = 'a';
-      targetColor1 = color(238, 210, 2);
-      targetRadius1 = 275;
-    } 
-    if (keyStates[83]) { // S (mid)
-      currentKey = 's';
-      targetColor1 = color(255, 102, 0);
-      targetRadius1 = 325;
-    } 
-    if (keyStates[87]) { // W (strong)
-      currentKey = 'w';
-      targetColor1 = color(255, 0, 0);
-      targetRadius1 = 375;
-    }
-    if (!keyStates[65] && !keyStates[83] && !keyStates[87]) { //set to white otherwise
-      targetColor1 = color(255);
-      targetRadius1 = 250;
-    }
-
-
-
-  } else if (currentMode === 2) { //five bags
     //FIRST PUNCHING BAG
     if (keyStates[65]) { // A (weak)
       currentKey = 'a';
@@ -247,34 +211,6 @@ function handleKeyPress() {
       targetRadiusBig1 = 525;
       targetColorBig1 = color(255);
     }
-  } else if (currentMode === 3) { //two bags
-    if (keyStates[65]) { // A (weak)
-      currentKey = 'a';
-      targetColor1 = color(238, 210, 2);
-      targetRadius1 = 275;
-    } 
-    if (keyStates[83]) { // S (mid)
-      currentKey = 's';
-      targetColor1 = color(255, 102, 0);
-      targetRadius1 = 325;
-    } 
-    if (keyStates[87]) { // W (strong)
-      currentKey = 'w';
-      targetColor1 = color(255, 0, 0);
-      targetRadius1 = 375;
-    }
-        //big bag
-    if (keyStates[68]) { // Big bag
-      currentKey = 'd';
-      targetColorBig1= color(238, 210, 2);
-      targetRadiusBig1 = 425;
-    }
-    if (!keyStates[65] && !keyStates[83] && !keyStates[87]&& !keyStates[68]) { //set to white otherwise
-      targetColor1 = color(255);
-      targetRadius1 = 250;
-      targetColorBig1 = color(255);
-      targetRadiusBig1 = 525;
-    }
   }
 
 
@@ -344,7 +280,6 @@ function handleKeyPress() {
       }
       previousKey = currentKey;
     }
-  }
   }
 
   // converting mouse to r
