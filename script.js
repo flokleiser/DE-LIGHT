@@ -1,3 +1,8 @@
+//to implement--> background opacity at start of draw loop
+//to implement--> own functions for circles
+
+
+
 //circle 1
 let circleColor1;
 let targetColor1;
