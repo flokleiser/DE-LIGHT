@@ -23,10 +23,10 @@ let circleRadius4 = 250;
 let targetRadius4 = 250;
 
 //big circle 1
-let circleColorBig1;
-let targetColorBig1;
-let circleRadiusBig1 = 525; 
-let targetRadiusBig1 = 525;
+let circleColorBig;
+let targetColorBig;
+let circleRadiusBig = 525; 
+let targetRadiusBig = 525;
 
 let lerpAmount = 0.5;
 let previousKey = null;
@@ -37,6 +37,7 @@ let currentMode = 1;
 function setup() {
   createCanvas(1120, 865);
 
+  //eventlisteners for mouse click
   canvas.addEventListener('contextmenu', (e) => {
     e.preventDefault();
     keyStates[3] = true;
@@ -61,8 +62,8 @@ function setup() {
   circleColor4 = color(255);
   targetColor4 = color(255)
 
-  circleColorBig1 = color(255);
-  targetColorBig1 = color(255)
+  circleColorBig = color(255);
+  targetColorBig = color(255)
 }
 
 function draw() {
@@ -78,31 +79,53 @@ function draw() {
   circleColor4 = lerpColor(circleColor4, targetColor4, lerpAmount);
   circleRadius4 = lerp(circleRadius4, targetRadius4, lerpAmount);
 
-  circleColorBig1 = lerpColor(circleColorBig1, targetColorBig1, lerpAmount);
-  circleRadiusBig1 = lerp(circleRadiusBig1, targetRadiusBig1, lerpAmount);
+  circleColorBig = lerpColor(circleColorBig, targetColorBig, lerpAmount);
+  circleRadiusBig = lerp(circleRadiusBig, targetRadiusBig, lerpAmount);
 
- if (currentMode === 1) { // only one circle
-  fill(circleColor1);
-  ellipse(width / 2, height / 2, circleRadius1, circleRadius1);
+ if (currentMode === 1) { //MENU
+
+  //circles
+  fill(255)
+  ellipse(width / 6.5, height / 4.75, circleRadius1, circleRadius1);
+  ellipse(width / 6.5, (height / 4.75)*3.75  , circleRadius2, circleRadius2);
+  ellipse((width / 6.5)*5.5, (height / 4.75)*3.75, circleRadius3, circleRadius3);
+  ellipse((width / 6.5)*5.5, height / 4.75 , circleRadius4, circleRadius4);
+  ellipse(width / 2, height / 2, circleRadiusBig, circleRadiusBig);
+
+  //menu texts
+  fill(0)
+  textSize(32);
+  textAlign(CENTER, CENTER);
+  textSize(circleRadiusBig/2)
+  text('▶', width / 2 + 20, height / 2 + 20);
+  textSize(circleRadius1/4)
+  text('Mode 1', width/ 6.5, (height / 4.75));
+  textSize(circleRadius2/4)
+  text('Mode 2', width/ 6.5, (height / 4.75) * 3.75);
+  textSize(circleRadius3/4)
+  text('Mode 3', (width/ 6.5) * 5.5, (height / 4.75)*3.75);
+  textSize(circleRadius4/4)
+  text('Mode 4', (width/ 6.5) * 5.5, (height / 4.75));
  }
 
  else if (currentMode === 2) { // four circles
-  // fill(circleColor2);
+  fill(circleColor1);
   ellipse(width / 6.5, height / 4.75, circleRadius1, circleRadius1);
+  fill(circleColor2);
   ellipse(width / 6.5, (height / 4.75)*3.75  , circleRadius2, circleRadius2);
-  ellipse((width / 6.5)*5.5, height / 4.75 , circleRadius4, circleRadius4);
+  fill(circleColor3);
   ellipse((width / 6.5)*5.5, (height / 4.75)*3.75, circleRadius3, circleRadius3);
-
-  ellipse(width / 2, height / 2, circleRadiusBig1, circleRadiusBig1);
+  fill(circleColor4);
+  ellipse((width / 6.5)*5.5, height / 4.75 , circleRadius4, circleRadius4);
+  fill(circleColorBig);
+  ellipse(width / 2, height / 2, circleRadiusBig, circleRadiusBig);
 
  }
 
  else if (currentMode === 3) {
 
-  // fill(circleColor1)
-  // ellipse(width / 8 * 7, height / 5, circleRadius1, circleRadius1);
   ellipse(width / 6.5 * 5.5, height / 4.75, circleRadius1, circleRadius1);
-  ellipse(width / 2, height / 2, circleRadiusBig1, circleRadiusBig1);
+  ellipse(width / 2, height / 2, circleRadiusBig, circleRadiusBig);
  }
 
   textAlign(CENTER);
@@ -113,6 +136,7 @@ function draw() {
 function handleKeyPress() {
   let currentKey = null;
 
+  //SETTING MODES
   if (keyStates[49]) {
     currentMode = 1;
     console.log('Mode 1');
@@ -195,10 +219,11 @@ function handleKeyPress() {
     //MIDDLE PUNCHING BAG
     if (keyStates[3]) { // Right-click (simulated key code 3)
       currentKey = 'right-click';
-      targetColorBig1 = color(255, 0, 0); 
-      targetRadiusBig1 = 555;
+      targetColorBig = color(255, 0, 0); 
+      targetRadiusBig = 555;
     }
 
+    //RESETTING
     if (!keyStates[65] && !keyStates[83] && !keyStates[87] &&! keyStates[70] && !keyStates[71] && !keyStates[68]  &&! keyStates[38] && !keyStates[40] && !keyStates[37] && !keyStates[39] && !keyStates[32] &&! keyStates[82] &&! keyStates[3]) { //set to white otherwise
       targetColor1 = color(255);
       targetRadius1 = 250;
@@ -208,8 +233,8 @@ function handleKeyPress() {
       targetRadius3 = 250;
       targetColor4 = color(255);
       targetRadius4 = 250;
-      targetRadiusBig1 = 525;
-      targetColorBig1 = color(255);
+      targetRadiusBig = 525;
+      targetColorBig = color(255);
     }
   }
 
