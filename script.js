@@ -91,11 +91,7 @@ function draw() {
     if (currentMode === 0) {
 		menu();
     } else if (currentMode === 1) {
-		// transitionMode1();
-		fill(circleColor1);
-		ellipse(width / 6.5, height / 4.75, circleRadius1, circleRadius1);
-		circleRadius1 = lerp(circleRadius1, transitionRadius, 0.1);
-		// mode1();
+		mode1();
     } else if (currentMode === 2) {
 		mode2();
     } else if (currentMode === 3) {
@@ -107,6 +103,7 @@ function draw() {
 }
 
 
+//failed transition test
 function transitionMode1() {
 	fill(circleColor1);
 	ellipse(width / 6.5, height / 4.75, circleRadius1, circleRadius1);
