@@ -32,16 +32,40 @@ let lerpAmount = 0.5;
 let previousKey = null;
 let keyStates = {};
 
+let randomNumberGenerated= false
+
 let currentMode = 0;
 let selectedMode = 0
 
 let fading = false
 let fadingTimer = 0
+let otherTimer = 0
 
 let testColor = 255
 
+let randomCircle1Test = false
+let randomCircle2Test = false   
+let randomNumberSeed1 = [2, 5, 0, 1, 3, 4]
+let randomNumberSeed2 = [5, 0, 1, 3, 4, 2]
+// let randomNumberSeed3 =
+// let randomNumberSeed4 =
+// let randomNumberSeed5 =
+
+
+
 function setup() {
     createCanvas(1120, 865);
+    returnRandomNumber();
+    console.log(randomNumber)
+    // if (randomNumber < 1) {
+    //     randomCircle1Test = true, randomCircle2Test = false
+    //     console.log('case 1')
+    // }
+    // if (randomNumber > 1) {
+    //     randomCircle2Test = true, randomCircle1Test = false;
+    //     console.log('case 2')
+    // }
+
 
     //eventlisteners for mouse click
     canvas.addEventListener("contextmenu", (e) => {
@@ -73,13 +97,6 @@ function setup() {
 }
 
 function draw() {
-    // if (fading) {
-    //     background(0,0,0,10);
-    //     console.log('fading check')
-    // } else {
-    //     background(0);
-    // }
-    // background(0);
     handleKeyPress();
 
 	circleColor1 = lerpColor(circleColor1, targetColor1, lerpAmount);
@@ -157,8 +174,6 @@ function checkFade() {
     }
 }
 
-
-
 //different modes
 function menu() {
     background(0);
@@ -212,16 +227,70 @@ function mode1() {
 }
 function mode2() {
     background(0);
+    otherTimer += 1
+    console.log(otherTimer)
 
-    drawPunchingBags(0, circleColor2, circleColor3, circleColor4, circleColorBig);
-    setTimeout(() => {
-        circleColor1 = color(255);
-    }, 1000)
+    circleColor1 = color(0)
+    circleColor2 = color(0)
+    circleColor3 = color(0)
+    circleColor4 = color(0)
+    circleColorBig = color(0)
+
+    drawPunchingBags(circleColor1, circleColor2, circleColor3, circleColor4, circleColorBig);
+
+    if (randomNumber < 1) {
+        randomCircle1Test = true, randomCircle2Test = false
+        console.log('case 1')
+    }
+    if (randomNumber > 1) {
+        randomCircle2Test = true, randomCircle1Test = false;
+        console.log('case 2')
+    }
+
+    if (otherTimer > 150) {
+        // if (randomNumber < 2) {
+        //     console.log('check')
+        // } 
+        if (randomCircle1Test) {
+            circleColor1 = color(0,255,0);
+            drawPunchingBags(circleColor1, circleColor2, circleColor3, circleColor4, circleColorBig);
+
+            if (keyStates[65] || keyStates[83] || keyStates[87]) {
+                circleColor1 = color(0);
+                otherTimer = 0
+            }
+        }
+        if (randomCircle2Test) {
+            circleColor2 = color(0,255,0);
+            drawPunchingBags(circleColor1, circleColor2, circleColor3, circleColor4, circleColorBig);
+            if (keyStates[70] || keyStates[71] || keyStates[68]) {
+                circleColor2 = color(0);
+                otherTimer = 0
+            }
+        }
+    }
+
+
+    if (otherTimer > 200) {
+        otherTimer = 0
+        returnRandomNumber()
+    }
+
+    circleColor1 = color(0)
+    circleColor2 = color(0)
+    circleColor3 = color(0)
+    circleColor4 = color(0)
+    circleColorBig = color(0)
+
+    // setTimeout(() => {
+    //     circleColor1 = color(255) 
+    //         console.log('color check');
+    // }, 500);
 
     fill(255);
     textSize(circleRadiusBig / 7);
-	textAlign(CENTER, CENTER);
-	text("Reflex Mode", width / 2, height / 8 );
+    textAlign(CENTER, CENTER);
+    text("Reflex Mode", width / 2, height / 8);
 }
 function mode3() {
     // console.log('mode 3')
@@ -293,6 +362,11 @@ function resetPunchingBags() {
     targetColorBig = color(255);
 }
 
+function returnRandomNumber() {
+    // return randomNumber = random(1, 5);
+    return randomNumber = random(0, 2);
+}
+
 //key press handling
 function handleKeyPress() {
     let currentKey = null;
@@ -303,7 +377,9 @@ function handleKeyPress() {
 		selectedMode = 0;
 		fading = false
 		fadingTimer = 0
-		// console.log("Reset modes");
+        otherTimer = 0
+		console.log("Reset modes");
+        returnRandomNumber()
 	}
 	
 	if (currentMode === 0) {
@@ -414,6 +490,9 @@ function handleKeyPress() {
         currentKey = "right-click";
         targetColorBig = color(255, 0, 0);
         targetRadiusBig = 555;
+        if (currentMode === 0 ){
+            returnRandomNumber()
+        }
     }
 
     //RESETTING
