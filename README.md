@@ -8,4 +8,5 @@ ___
 
 ### To-Do:
 - [ ] reflex-mode
+- [ ] Middle circle to hexagon
 

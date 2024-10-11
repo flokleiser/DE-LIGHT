@@ -3,7 +3,6 @@ let circleColor1;
 let targetColor1;
 let circleRadius1 = 250; // at 60 cm distance perfect
 let targetRadius1 = 250;
-let transitionRadius = 10000
 
 //circle 2
 let circleColor2;
@@ -39,6 +38,8 @@ let selectedMode = 0
 let fading = false
 let fadingTimer = 0
 
+let testColor = 255
+
 function setup() {
     createCanvas(1120, 865);
 
@@ -72,8 +73,13 @@ function setup() {
 }
 
 function draw() {
-	background(0);
-    background(0,0,0,10);
+    // if (fading) {
+    //     background(0,0,0,10);
+    //     console.log('fading check')
+    // } else {
+    //     background(0);
+    // }
+    // background(0);
     handleKeyPress();
 
 	circleColor1 = lerpColor(circleColor1, targetColor1, lerpAmount);
@@ -90,6 +96,8 @@ function draw() {
     if (currentMode === 0) {
 		menu();
     } else if (currentMode === 1) {
+        //this kinda works for fading the color
+        // checkFade()
 		mode1();
     } else if (currentMode === 2) {
 		mode2();
@@ -100,22 +108,87 @@ function draw() {
 	}
 }
 
+//custom draw function test
+// function mode1Draw() {
+//     let scale = 1
+//     background(0,0,0,10);
+//     handleKeyPress();
+
+// 	circleColor1 = lerpColor(circleColor1, targetColor1, lerpAmount);
+//     circleRadius1 = lerp(circleRadius1, targetRadius1, lerpAmount);
+//     circleColor2 = lerpColor(circleColor2, targetColor2, lerpAmount);
+//     circleRadius2 = lerp(circleRadius2, targetRadius2, lerpAmount);
+//     circleColor3 = lerpColor(circleColor3, targetColor3, lerpAmount);
+//     circleRadius3 = lerp(circleRadius3, targetRadius3, lerpAmount);
+//     circleColor4 = lerpColor(circleColor4, targetColor4, lerpAmount);
+//     circleRadius4 = lerp(circleRadius4, targetRadius4, lerpAmount);
+//     circleColorBig = lerpColor(circleColorBig, targetColorBig, lerpAmount);
+//     circleRadiusBig = lerp(circleRadiusBig, targetRadiusBig, lerpAmount);
+//     // mode1()
+//     circle(width/2,height/2,scale)
+// }
+
+
 //failed transition test
-function transitionMode1() {
-	fill(circleColor1);
-	ellipse(width / 6.5, height / 4.75, circleRadius1, circleRadius1);
-	circleRadius1 = lerp(circleRadius1, transitionRadius, 0.001);
+// function setFade() {
+//     fading = true
+//     fadeTimer = 0
+//     fadeTimer++
+//     if (fadeTimer > 1000) {
+//        fading = false 
+//        return
+//     }
+//     console.log('fading' + fading)
+// }
+
+//kinda successful fade test
+function checkFade() {
+    if (fading) {
+        circleColor1 = color(testColor);
+        testColor -= 5 
+        background(0,0,0,10);
+        console.log('fading')
+    } 
+    if ( testColor < 0) {
+        background(0)
+        fading = false
+        console.log('fade stopped')
+        circleColor1 = lerpColor(circleColor1, targetColor1, lerpAmount);
+    }
 }
 
+
+
+//different modes
 function menu() {
+    background(0);
 	fill(255);
-	drawPunchingBags();
+
+    let centerTextSize = (circleRadiusBig / 2) - 50 ;
+    // let selectedColor = color(0, 255, 0);
+	// drawPunchingBags();
+    switch (selectedMode) {
+        case 1: circleRadius1 = circleRadius1 + 30; break;
+        case 2: circleRadius2 = circleRadius2 + 30; break;
+        case 3: circleRadius3 = circleRadius3 + 30; break;
+        case 4: circleRadius4 = circleRadius4 + 30; break;
+    }
+
+    fill(selectedMode === 1 ? 255 : 100)
+    ellipse(width / 6.5, height / 4.75, circleRadius1, circleRadius1);
+    fill(selectedMode === 2 ? 255 : 100)
+    ellipse(width / 6.5, (height / 4.75) * 3.75, circleRadius2, circleRadius2);
+    fill(selectedMode === 3 ? 255 : 100)
+    ellipse( (width / 6.5) * 5.5, (height / 4.75) * 3.75, circleRadius3, circleRadius3 );
+    fill(selectedMode === 4 ? 255 : 100)
+    ellipse((width / 6.5) * 5.5, height / 4.75, circleRadius4, circleRadius4);
+    hexagon(width/2, height/2, 255);
 
 	//menu texts
 	fill(0);
 	textSize(32);
 	textAlign(CENTER, CENTER);
-	textSize(circleRadiusBig / 2);
+	textSize(centerTextSize);
 	text("▶", width / 2 + 20, height / 2 + 20);
 	textSize(circleRadius1 / 4);
 	text("Mode 1", width / 6.5, height / 4.75);
@@ -127,55 +200,84 @@ function menu() {
 	text("Mode 4", (width / 6.5) * 5.5, height / 4.75);
 }
 function mode1() {
-	fill(circleColor1);
-	ellipse(width / 6.5, height / 4.75, circleRadius1, circleRadius1);
-	fill(circleColor2);
-	ellipse( width / 6.5, (height / 4.75) * 3.75, circleRadius2, circleRadius2 );
-	fill(circleColor3);
-	ellipse( (width / 6.5) * 5.5, (height / 4.75) * 3.75, circleRadius3, circleRadius3 );
-	fill(circleColor4);
-	ellipse( (width / 6.5) * 5.5, height / 4.75, circleRadius4, circleRadius4 );
-	fill(circleColorBig);
-	ellipse(width / 2, height / 2, circleRadiusBig, circleRadiusBig);
+    background(0);
+    drawPunchingBags(circleColor1, circleColor2, circleColor3, circleColor4, circleColorBig);
+    hexagon(width/2, height/2, circleColorBig)
+
+    fill(0);
+    textSize(circleRadiusBig / 7);
+	textAlign(CENTER, CENTER);
+	text("Free Punch", width / 2, height / 2 );
+
 }
 function mode2() {
-	fill(255)
-	ellipse( (width / 6.5) * 5.5, height / 4.75, circleRadius1, circleRadius1 );
-	ellipse(width / 2, height / 2, circleRadiusBig, circleRadiusBig);
+    background(0);
+
+    drawPunchingBags(0, circleColor2, circleColor3, circleColor4, circleColorBig);
+    setTimeout(() => {
+        circleColor1 = color(255);
+    }, 1000)
+
+    fill(255);
+    textSize(circleRadiusBig / 7);
+	textAlign(CENTER, CENTER);
+	text("Reflex Mode", width / 2, height / 8 );
 }
 function mode3() {
-    console.log('mode 3')
-    initModeAnimation()
+    // console.log('mode 3')
+    // initModeAnimation()
+    background(0);
+    hexagon(width/2, height/2, circleColorBig)
 
-	//todo
+    fill(0);
+    textSize(circleRadiusBig / 7);
+	textAlign(CENTER, CENTER);
+	text("Not done yet", width / 2, height / 2 );
 }
 function mode4() {
+    background(0);
 	fill(255)
-	drawPunchingBags();
+	drawPunchingBags(circleColor1, circleColor2, circleColor3, circleColor4, circleColorBig);
 	fill(0)
 	textSize(circleRadius2 / 4);
 	text("Exit", width / 6.5, (height / 4.75) * 3.75);
 	textSize(circleRadius3 / 4);
 	text("Exit", (width / 6.5) * 5.5, (height / 4.75) * 3.75);
+
+    fill(0);
+    textSize(circleRadiusBig / 7);
+	textAlign(CENTER, CENTER);
+	text("How to Exit", width / 2, height / 2 );
 }
 
-function initModeAnimation() {
-	clear()
-	fill(50)	
-	drawPunchingBags()
-}
+function hexagon(centerX, centerY, fillColor) {
+    fill(fillColor)
+    push();
+    translate(centerX, centerY);
+    scale(circleRadiusBig/275);
+    beginShape();
+      vertex(-75, -130);
+      vertex(75, -130);
+      vertex(150, 0);
+      vertex(75, 130);
+    vertex(-75, 130);
+      vertex(-150, 0);
+      endShape(CLOSE); 
+      pop();
+  }
 
-function drawPunchingBags() {
+function drawPunchingBags(fillColor1, fillColor2, fillColor3, fillColor4, fillColorBig) {
+    fill(fillColor1);
     ellipse(width / 6.5, height / 4.75, circleRadius1, circleRadius1);
+    fill(fillColor2);
     ellipse(width / 6.5, (height / 4.75) * 3.75, circleRadius2, circleRadius2);
-    ellipse(
-        (width / 6.5) * 5.5,
-        (height / 4.75) * 3.75,
-        circleRadius3,
-        circleRadius3
-    );
+    fill(fillColor3);
+    ellipse( (width / 6.5) * 5.5, (height / 4.75) * 3.75, circleRadius3, circleRadius3 );
+    fill(fillColor4);
     ellipse((width / 6.5) * 5.5, height / 4.75, circleRadius4, circleRadius4);
-    ellipse(width / 2, height / 2, circleRadiusBig, circleRadiusBig);
+    // ellipse(width / 2, height / 2, circleRadiusBig, circleRadiusBig);
+    fill(fillColorBig);
+    hexagon(width/2, height/2, fillColorBig);
 }
 
 function resetPunchingBags() {
@@ -201,29 +303,29 @@ function handleKeyPress() {
 		selectedMode = 0;
 		fading = false
 		fadingTimer = 0
-		console.log("Reset modes");
+		// console.log("Reset modes");
 	}
 	
 	if (currentMode === 0) {
 		if (keyStates[65] || keyStates[83] || keyStates[87]) {
 			selectedMode= 1;
-			console.log("Mode 1");
+			// console.log("Mode 1");
 		} else if (keyStates[70] || keyStates[71] || keyStates[68]) {
 			selectedMode= 2;
-			console.log("Mode 2");
+			// console.log("Mode 2");
 		} else if (keyStates[38] || keyStates[40] || keyStates[37]) {
 			selectedMode= 3;
-			console.log("Mode 3");
+			// console.log("Mode 3");
 		} else if (keyStates[39] || keyStates[32] || keyStates[82]) {
 			selectedMode= 4;
-			console.log("Mode 4");
+			// console.log("Mode 4");
 		}
 	}
 
 	if (selectedMode != 0 && keyStates[3]) {
 		// initModeAnimation();
 		currentMode = selectedMode;
-		console.log("Selected mode: " + currentMode);
+		// console.log("Selected mode: " + currentMode);
 	}
 
     //FIRST PUNCHING BAG
