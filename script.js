@@ -72,9 +72,8 @@ function setup() {
 }
 
 function draw() {
-
-	// background(0,0,0, 50);
 	background(0);
+    background(0,0,0,10);
     handleKeyPress();
 
 	circleColor1 = lerpColor(circleColor1, targetColor1, lerpAmount);
@@ -99,9 +98,7 @@ function draw() {
 	} else if (currentMode === 4) {
 		mode4();
 	}
-	
 }
-
 
 //failed transition test
 function transitionMode1() {
@@ -147,7 +144,9 @@ function mode2() {
 	ellipse(width / 2, height / 2, circleRadiusBig, circleRadiusBig);
 }
 function mode3() {
-	console.log('not implemented yet')
+    console.log('mode 3')
+    initModeAnimation()
+
 	//todo
 }
 function mode4() {
@@ -192,6 +191,7 @@ function resetPunchingBags() {
     targetColorBig = color(255);
 }
 
+//key press handling
 function handleKeyPress() {
     let currentKey = null;
 
@@ -221,7 +221,6 @@ function handleKeyPress() {
 	}
 
 	if (selectedMode != 0 && keyStates[3]) {
-		//todo: add animation here
 		// initModeAnimation();
 		currentMode = selectedMode;
 		console.log("Selected mode: " + currentMode);
@@ -331,17 +330,6 @@ function handleKeyPress() {
         !keyStates[82] &&
         !keyStates[3]
     ) {
-        //set to white otherwise
-        // targetColor1 = color(255);
-        // targetRadius1 = 250;
-        // targetColor2 = color(255);
-        // targetRadius2 = 250;
-        // targetColor3 = color(255);
-        // targetRadius3 = 250;
-        // targetColor4 = color(255);
-        // targetRadius4 = 250;
-        // targetRadiusBig = 525;
-        // targetColorBig = color(255);
         resetPunchingBags();
     }
 }
