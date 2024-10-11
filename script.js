@@ -45,11 +45,17 @@ let testColor = 255
 
 let randomCircle1Test = false
 let randomCircle2Test = false   
+let randomCircle3Test = false
+let randomCircle4Test = false
+let randomCircleBigTest = false
+
 let randomNumberSeed1 = [2, 5, 0, 1, 3, 4]
 let randomNumberSeed2 = [5, 0, 1, 3, 4, 2]
 // let randomNumberSeed3 =
 // let randomNumberSeed4 =
 // let randomNumberSeed5 =
+
+let randomCircleTimeout = 500
 
 
 
@@ -57,14 +63,6 @@ function setup() {
     createCanvas(1120, 865);
     returnRandomNumber();
     console.log(randomNumber)
-    // if (randomNumber < 1) {
-    //     randomCircle1Test = true, randomCircle2Test = false
-    //     console.log('case 1')
-    // }
-    // if (randomNumber > 1) {
-    //     randomCircle2Test = true, randomCircle1Test = false;
-    //     console.log('case 2')
-    // }
 
 
     //eventlisteners for mouse click
@@ -125,38 +123,6 @@ function draw() {
 	}
 }
 
-//custom draw function test
-// function mode1Draw() {
-//     let scale = 1
-//     background(0,0,0,10);
-//     handleKeyPress();
-
-// 	circleColor1 = lerpColor(circleColor1, targetColor1, lerpAmount);
-//     circleRadius1 = lerp(circleRadius1, targetRadius1, lerpAmount);
-//     circleColor2 = lerpColor(circleColor2, targetColor2, lerpAmount);
-//     circleRadius2 = lerp(circleRadius2, targetRadius2, lerpAmount);
-//     circleColor3 = lerpColor(circleColor3, targetColor3, lerpAmount);
-//     circleRadius3 = lerp(circleRadius3, targetRadius3, lerpAmount);
-//     circleColor4 = lerpColor(circleColor4, targetColor4, lerpAmount);
-//     circleRadius4 = lerp(circleRadius4, targetRadius4, lerpAmount);
-//     circleColorBig = lerpColor(circleColorBig, targetColorBig, lerpAmount);
-//     circleRadiusBig = lerp(circleRadiusBig, targetRadiusBig, lerpAmount);
-//     // mode1()
-//     circle(width/2,height/2,scale)
-// }
-
-
-//failed transition test
-// function setFade() {
-//     fading = true
-//     fadeTimer = 0
-//     fadeTimer++
-//     if (fadeTimer > 1000) {
-//        fading = false 
-//        return
-//     }
-//     console.log('fading' + fading)
-// }
 
 //kinda successful fade test
 function checkFade() {
@@ -239,39 +205,127 @@ function mode2() {
     drawPunchingBags(circleColor1, circleColor2, circleColor3, circleColor4, circleColorBig);
 
     if (randomNumber < 1) {
-        randomCircle1Test = true, randomCircle2Test = false
+        randomCircle1Test = true, randomCircle2Test = false, randomCircle3Test = false, randomCircle4Test = false, randomCircleBigTest = false;
         console.log('case 1')
     }
-    if (randomNumber > 1) {
-        randomCircle2Test = true, randomCircle1Test = false;
+    if (randomNumber > 1 && randomNumber < 2) {
+        randomCircle1Test = false, randomCircle2Test = true, randomCircle3Test = false, randomCircle4Test = false, randomCircleBigTest = false;
         console.log('case 2')
     }
+    if (randomNumber > 2 && randomNumber < 3) {
+        randomCircle1Test = false, randomCircle2Test = false, randomCircle3Test = true, randomCircle4Test = false, randomCircleBigTest = false;
+        console.log('case 3')
+    }
+    if (randomNumber > 3 && randomNumber < 4) {
+        randomCircle1Test = false, randomCircle2Test = false, randomCircle3Test = false, randomCircle4Test = true, randomCircleBigTest = false;
+        console.log('case 4')
+    }
+    if (randomNumber > 4 && randomNumber < 5) {
+        randomCircle1Test = false, randomCircle2Test = false, randomCircle3Test = false, randomCircle4Test = false, randomCircleBigTest = true;
+        console.log('case 5')
+    }
 
-    if (otherTimer > 150) {
-        // if (randomNumber < 2) {
-        //     console.log('check')
-        // } 
+    if (otherTimer > 100) {
         if (randomCircle1Test) {
-            circleColor1 = color(0,255,0);
+            // circleColor1 = color(0,255,0);
+            circleColor1 = color(255)
             drawPunchingBags(circleColor1, circleColor2, circleColor3, circleColor4, circleColorBig);
 
             if (keyStates[65] || keyStates[83] || keyStates[87]) {
-                circleColor1 = color(0);
-                otherTimer = 0
+                circleColor1 = color(0,255,0)
+                drawPunchingBags(circleColor1, circleColor2, circleColor3, circleColor4, circleColorBig);
+                setTimeout(() => {
+                // circleColor1 = color(0);
+                    otherTimer = 0
+                    returnRandomNumber()
+                }, randomCircleTimeout);
+            }
+            // if (otherTimer > 175) {
+            if (otherTimer > 175 && circleColor1 != color(0,255,0)) {
+                circleColor1= color(255,0,0);
+                drawPunchingBags(circleColor1, circleColor2, circleColor3, circleColor4, circleColorBig);
             }
         }
         if (randomCircle2Test) {
-            circleColor2 = color(0,255,0);
+            // circleColor2 = color(0,255,0);
+            circleColor2 = color(255)
             drawPunchingBags(circleColor1, circleColor2, circleColor3, circleColor4, circleColorBig);
+
             if (keyStates[70] || keyStates[71] || keyStates[68]) {
-                circleColor2 = color(0);
-                otherTimer = 0
+                circleColor2 = color(0,255,0)
+                drawPunchingBags(circleColor1, circleColor2, circleColor3, circleColor4, circleColorBig);
+                setTimeout(() => {
+                    otherTimer = 0
+                    returnRandomNumber()
+                }, randomCircleTimeout);
+            }
+            
+            // if (otherTimer > 175) {
+            if (otherTimer > 175 && circleColor2 != color(0,255,0)) {
+                circleColor2= color(255,0,0);
+                drawPunchingBags(circleColor1, circleColor2, circleColor3, circleColor4, circleColorBig);
             }
         }
+        if (randomCircle3Test) {
+            // circleColor3 = color(0,255,0);
+            circleColor3 = color(255)
+            drawPunchingBags(circleColor1, circleColor2, circleColor3, circleColor4, circleColorBig);
+            if (keyStates[38] || keyStates[40] || keyStates[37]) {
+                circleColor3 = color(0,255,0)
+                drawPunchingBags(circleColor1, circleColor2, circleColor3, circleColor4, circleColorBig);
+                setTimeout(() => {
+                    otherTimer = 0
+                    returnRandomNumber()
+                }, randomCircleTimeout);
+            }
+            // if (otherTimer > 175) {
+            if (otherTimer > 175 &&  circleColor3 != color(0,255,0)) {
+                circleColor3= color(255,0,0);
+                drawPunchingBags(circleColor1, circleColor2, circleColor3, circleColor4, circleColorBig);
+            }
+        }
+        if (randomCircle4Test) {
+            // circleColor4 = color(0,255,0);
+            circleColor4 = color(255)
+            drawPunchingBags(circleColor1, circleColor2, circleColor3, circleColor4, circleColorBig);
+            if (keyStates[39] || keyStates[32] || keyStates[82]) {
+                circleColor4 = color(0,255,0)
+                drawPunchingBags(circleColor1, circleColor2, circleColor3, circleColor4, circleColorBig);
+                setTimeout(() => {
+                    otherTimer = 0
+                    returnRandomNumber()
+                }, randomCircleTimeout);
+            }
+            if (otherTimer > 175 && circleColor4 != color(0,255,0)) {
+                circleColor4= color(255,0,0);
+                drawPunchingBags(circleColor1, circleColor2, circleColor3, circleColor4, circleColorBig);
+            }
+        }
+        if (randomCircleBigTest) {
+            // circleColorBig = color(0,255,0);
+            circleColorBig = color(255) 
+            drawPunchingBags(circleColor1, circleColor2, circleColor3, circleColor4, circleColorBig);
+            if (keyStates[3]) {
+                circleColorBig = color(0,255,0)
+                drawPunchingBags(circleColor1, circleColor2, circleColor3, circleColor4, circleColorBig);
+                setTimeout(() => {
+                    otherTimer = 0
+                    returnRandomNumber()
+                }, randomCircleTimeout);
+            }
+            // if (otherTimer > 175) {
+            if (otherTimer > 175 && circleColorBig != color(0,255,0)) {
+                circleColorBig = color(255,0,0);
+                drawPunchingBags(circleColor1, circleColor2, circleColor3, circleColor4, circleColorBig);
+            }
+        }
+
     }
 
 
+
     if (otherTimer > 200) {
+
         otherTimer = 0
         returnRandomNumber()
     }
@@ -282,13 +336,10 @@ function mode2() {
     circleColor4 = color(0)
     circleColorBig = color(0)
 
-    // setTimeout(() => {
-    //     circleColor1 = color(255) 
-    //         console.log('color check');
-    // }, 500);
+ 
 
     fill(255);
-    textSize(circleRadiusBig / 7);
+    textSize(75);
     textAlign(CENTER, CENTER);
     text("Reflex Mode", width / 2, height / 8);
 }
@@ -364,7 +415,7 @@ function resetPunchingBags() {
 
 function returnRandomNumber() {
     // return randomNumber = random(1, 5);
-    return randomNumber = random(0, 2);
+    return randomNumber = random(0, 5);
 }
 
 //key press handling
