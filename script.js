@@ -34,14 +34,12 @@ let keyStates = {};
 
 let randomNumberGenerated= false
 
+//without logo
 let currentMode = 0;
+//with logo
+// let currentMode = 5;
 let selectedMode = 0
 
-
-
-// let fading = false
-// let fadingTimer = 0
-// let testColor = 255
 
 let reflexTimer = 0
 
@@ -113,37 +111,64 @@ function draw() {
 
     if (currentMode === 0) {
 		menu();
+        uiBackButton("Back")
+        uiTitleText("Mode Select")
     } else if (currentMode === 1) {
-        //this kinda works for fading the color
-        // checkFade()
 		mode1();
+        uiBackButton("Back to Mode Select")
+        uiTitleText("Free Punch")
     } else if (currentMode === 2) {
 		mode2();
+        uiBackButton("Back to Mode Select")
+        uiTitleText("Reflex Test")
     } else if (currentMode === 3) {
 		mode3();
+        uiBackButton("Back to Mode Select")
+        uiTitleText("Not Implemented yet :(")
 	} else if (currentMode === 4) {
 		mode4();
-	}
-}
-
-
-//kinda successful fade test
-function checkFade() {
-    if (fading) {
-        circleColor1 = color(testColor);
-        testColor -= 5 
-        background(0,0,0,10);
-        console.log('fading')
-    } 
-    if ( testColor < 0) {
-        background(0)
-        fading = false
-        console.log('fade stopped')
-        circleColor1 = lerpColor(circleColor1, targetColor1, lerpAmount);
+        uiBackButton("Back to Mode Select")
+        uiTitleText("Exit Test")
+	} else if (currentMode === 5) {
+        logo();
     }
 }
 
 //different modes
+function logo() {
+    background(0);
+    hexagon(width/2, height/2, 255);
+    fill(0);
+    textSize(80);
+    textAlign(CENTER, CENTER);
+    text("(LOGO)", width / 2, height / 2 - 100);
+    textSize(50);
+    textAlign(CENTER, CENTER);
+    text("press to play", width / 2, height / 2 + 100);
+}
+
+function uiTitleText(modeText){
+    fill(100)
+    textAlign(CENTER, CENTER);
+    textSize(50);
+    text(modeText, width/2, height/12)
+}
+function uiBackButton(uiBackButtonText) {
+    let point1 = createVector(width/2.6, height/15*14)
+    let point2 = createVector(width/2.6*1.6, height/15*14)
+    stroke(100)
+    strokeWeight(5)
+    line(point1.x, point1.y, point2.x, point2.y)
+    line(point1.x, point1.y, point1.x - 50, point1.y - 30)
+    line(point2.x, point2.y, point2.x + 50, point2.y - 30)
+    strokeWeight(0)
+    stroke(0)
+    // fill(255,255,255,75)
+    fill(100)
+    textAlign(CENTER, CENTER);
+    textSize(25);
+    text(uiBackButtonText, width/2, height/15*14 - 25)
+}
 function menu() {
     background(0);
 	fill(255);
@@ -188,10 +213,10 @@ function mode1() {
     drawPunchingBags(circleColor1, circleColor2, circleColor3, circleColor4, circleColorBig);
     hexagon(width/2, height/2, circleColorBig)
 
-    fill(0);
-    textSize(circleRadiusBig / 7);
-	textAlign(CENTER, CENTER);
-	text("Free Punch", width / 2, height / 2 );
+    // fill(0);
+    // textSize(circleRadiusBig / 7);
+	// textAlign(CENTER, CENTER);
+	// text("Free Punch", width / 2, height / 2 );
 
 }
 function mode2() {
@@ -340,10 +365,10 @@ function mode2() {
 
  
 
-    fill(255);
-    textSize(75);
-    textAlign(CENTER, CENTER);
-    text("Reflex Mode", width / 2, height / 8);
+    // fill(255);
+    // textSize(75);
+    // textAlign(CENTER, CENTER);
+    // text("Reflex Mode", width / 2, height / 8);
 }
 function mode3() {
     // console.log('mode 3')
@@ -351,10 +376,10 @@ function mode3() {
     background(0);
     hexagon(width/2, height/2, circleColorBig)
 
-    fill(0);
-    textSize(circleRadiusBig / 7);
-	textAlign(CENTER, CENTER);
-	text("Not done yet", width / 2, height / 2 );
+    // fill(0);
+    // textSize(circleRadiusBig / 7);
+	// textAlign(CENTER, CENTER);
+	// text("Not done yet", width / 2, height / 2 );
 }
 function mode4() {
     background(0);
@@ -366,10 +391,10 @@ function mode4() {
 	textSize(circleRadius3 / 4);
 	text("Exit", (width / 6.5) * 5.5, (height / 4.75) * 3.75);
 
-    fill(0);
-    textSize(circleRadiusBig / 7);
-	textAlign(CENTER, CENTER);
-	text("How to Exit", width / 2, height / 2 );
+    // fill(0);
+    // textSize(circleRadiusBig / 7);
+	// textAlign(CENTER, CENTER);
+	// text("How to Exit", width / 2, height / 2 );
 }
 
 function hexagon(centerX, centerY, fillColor) {
@@ -434,6 +459,13 @@ function handleKeyPress() {
 		console.log("Reset modes");
         returnRandomNumber()
 	}
+
+    if (currentMode === 5) {
+        if (keyStates[3]) {
+            currentMode = 0;
+            selectedMode = 0;
+        }
+    }
 	
 	if (currentMode === 0) {
 		if (keyStates[65] || keyStates[83] || keyStates[87]) {
@@ -463,18 +495,21 @@ function handleKeyPress() {
         currentKey = "a";
         targetColor1 = color(238, 210, 2);
         targetRadius1 = 275;
+        // targetRadius1 = 275;
     }
     if (keyStates[83]) {
         // S (mid)
         currentKey = "s";
         targetColor1 = color(255, 102, 0);
         targetRadius1 = 325;
+        // targetRadius1 = 275;
     }
     if (keyStates[87]) {
         // W (strong)
         currentKey = "w";
         targetColor1 = color(255, 0, 0);
         targetRadius1 = 375;
+        // targetRadius1 = 300;
     }
 
     //SECOND PUNCHING BAG
@@ -543,9 +578,6 @@ function handleKeyPress() {
         currentKey = "right-click";
         targetColorBig = color(255, 0, 0);
         targetRadiusBig = 555;
-        if (currentMode === 0 ){
-            returnRandomNumber()
-        }
     }
 
     //RESETTING
