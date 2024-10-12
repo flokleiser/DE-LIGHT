@@ -38,19 +38,18 @@ let currentMode = 0;
 let selectedMode = 0
 
 
-
-// let fading = false
-// let fadingTimer = 0
-// let testColor = 255
-
 let reflexTimer = 0
-
 //checking if circles were hit
 let hitCircle1 = false;
 let hitCircle2 = false;
 let hitCircle3 = false;
 let hitCircle4 = false;
 let hitCircleBig = false;
+
+let fadeAmount = 0;
+let isTransitioning = false;
+let nextMode = 0;
+
 
 let randomCircle1Test = false
 let randomCircle2Test = false   
@@ -100,6 +99,15 @@ function setup() {
 function draw() {
     handleKeyPress();
 
+     if (isTransitioning) {
+        transitionToMode();
+    } else {
+        updateCircles();
+        renderCurrentMode();
+    }
+}
+
+function updateCircles() {
 	circleColor1 = lerpColor(circleColor1, targetColor1, lerpAmount);
     circleRadius1 = lerp(circleRadius1, targetRadius1, lerpAmount);
     circleColor2 = lerpColor(circleColor2, targetColor2, lerpAmount);
@@ -110,7 +118,10 @@ function draw() {
     circleRadius4 = lerp(circleRadius4, targetRadius4, lerpAmount);
     circleColorBig = lerpColor(circleColorBig, targetColorBig, lerpAmount);
     circleRadiusBig = lerp(circleRadiusBig, targetRadiusBig, lerpAmount);
+}
 
+
+function renderCurrentMode() {
     if (currentMode === 0) {
 		menu();
     } else if (currentMode === 1) {
@@ -126,22 +137,55 @@ function draw() {
 	}
 }
 
-
-//kinda successful fade test
-function checkFade() {
-    if (fading) {
-        circleColor1 = color(testColor);
-        testColor -= 5 
-        background(0,0,0,10);
-        console.log('fading')
-    } 
-    if ( testColor < 0) {
-        background(0)
-        fading = false
-        console.log('fade stopped')
-        circleColor1 = lerpColor(circleColor1, targetColor1, lerpAmount);
+function transitionToMode() {
+    if (fadeAmount < 1) {
+        fadeAmount += 0.05;
+        fadeOutCurrentMode();
+    } else {
+        currentMode = nextMode;
+        fadeAmount = 0;
+        isTransitioning = false;
     }
 }
+
+function fadeOutCurrentMode() {
+    push();
+    tint(255, 255 * (1 - fadeAmount));
+    renderCurrentMode();
+    pop();
+}
+
+function fadeInNewMode() {
+    push();
+    tint(255, 255 * fadeAmount);
+    renderCurrentMode();
+    pop();
+}
+
+function switchMode(mode) {
+    if (currentMode !== mode) {
+        nextMode = mode;
+        isTransitioning = true;
+        fadeAmount = 0;
+    }
+}
+
+
+//kinda successful fade test
+// function checkFade() {
+//     if (fading) {
+//         circleColor1 = color(testColor);
+//         testColor -= 5 
+//         background(0,0,0,10);
+//         console.log('fading')
+//     } 
+//     if ( testColor < 0) {
+//         background(0)
+//         fading = false
+//         console.log('fade stopped')
+//         circleColor1 = lerpColor(circleColor1, targetColor1, lerpAmount);
+//     }
+// }
 
 //different modes
 function menu() {
@@ -543,9 +587,15 @@ function handleKeyPress() {
         currentKey = "right-click";
         targetColorBig = color(255, 0, 0);
         targetRadiusBig = 555;
-        if (currentMode === 0 ){
-            returnRandomNumber()
-        }
+        // if (currentMode === 0 ){
+        //     returnRandomNumber()
+        // }
+
+    }
+
+    //transition test
+    if (keyStates[49]) { // If '1' key is pressed
+        switchMode(1);
     }
 
     //RESETTING
