@@ -7,6 +7,8 @@
 ___
 
 ### To-Do:
-- [ ] reflex-mode
-- [ ] Middle circle to hexagon
+- [x] reflex-mode
+- [x] Middle circle to hexagon
 
+- [ ] Ideas on how to fix transitions: 
+    - [ ] Seperate "draw mode" for transitions

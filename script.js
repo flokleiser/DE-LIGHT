@@ -39,8 +39,6 @@ let currentMode = 0;
 //with logo
 // let currentMode = 5;
 let selectedMode = 0
-
-
 let reflexTimer = 0
 
 //checking if circles were hit
@@ -57,6 +55,21 @@ let randomCircle4Test = false
 let randomCircleBigTest = false
 
 let randomCircleTimeout = 500
+
+
+//testing variables
+let fadeInTimer = 0
+let fadeOutTimerSmall = 100 
+let fadeOutTimerBig = 255
+let transitionColor = 0
+let transitionColorSmall = 0
+let transitionColorBig = 0
+
+let fadeOutBigCircleRadius = 1
+
+let fadeOutFlag = false
+let fadeInFlag = false
+
 
 
 
@@ -114,30 +127,85 @@ function draw() {
         uiBackButton("Back")
         uiTitleText("Mode Select")
     } else if (currentMode === 1) {
-		mode1();
-        uiBackButton("Back to Mode Select")
-        uiTitleText("Free Punch")
+		// mode1();
+        testModeFadeOut(mode1);
     } else if (currentMode === 2) {
-		mode2();
-        uiBackButton("Back to Mode Select")
-        uiTitleText("Reflex Test")
+		// mode2();
+        testModeFadeOut(mode2);
     } else if (currentMode === 3) {
-		mode3();
-        uiBackButton("Back to Mode Select")
-        uiTitleText("Not Implemented yet :(")
+		// mode3();
+        testModeFadeOut(mode3)
 	} else if (currentMode === 4) {
-		mode4();
-        uiBackButton("Back to Mode Select")
-        uiTitleText("Exit Test")
+		// mode4();
+        testModeFadeOut(mode4)
 	} else if (currentMode === 5) {
         logo();
     }
 }
 
 //different modes
+
+//todo: transition function
+function transition(){
+}
+
+function testModeFadeIn(){
+    background(0);
+    if (fadeInTimer < 255) {
+        fadeInTimer += 5 
+    } 
+    console.log(fadeInTimer)
+    transitionColor = color(255,255,255,fadeInTimer)
+
+    fill(transitionColor);
+    ellipse(width / 6.5, height / 4.75, circleRadius1, circleRadius1);
+    fill(transitionColor);
+    ellipse(width / 6.5, (height / 4.75) * 3.75, circleRadius2, circleRadius2);
+    fill(transitionColor);
+    ellipse( (width / 6.5) * 5.5, (height / 4.75) * 3.75, circleRadius3, circleRadius3 );
+    fill(transitionColor);
+    ellipse((width / 6.5) * 5.5, height / 4.75, circleRadius4, circleRadius4);
+    fill(transitionColor);
+    hexagon(width/2, height/2,transitionColor, circleRadiusBig/275);
+}
+function testModeFadeOut(targetMode){
+    if (fadeOutFlag === false) {
+        background(0);
+        if (fadeOutTimerBig > 0) {
+            fadeOutTimerBig -= 3 
+            fadeOutTimerSmall -= 1 
+            fadeOutBigCircleRadius += 10
+        } else {
+            fadeOutFlag = true
+            fadeOutBigCircleRadius = 1
+        }
+        circleRadiusBig = circleRadiusBig + fadeOutBigCircleRadius
+        console.log(fadeOutTimerBig, fadeOutTimerSmall)
+
+        // transitionColorSmall = color(100,100,100,fadeOutTimerSmall)
+        transitionColorSmall = color(fadeOutTimerSmall)
+        // transitionColorBig = color(255, 255, 255, fadeOutTimerBig);
+        transitionColorBig = color(fadeOutTimerBig);
+
+        fill(transitionColorSmall);
+        ellipse(width / 6.5, height / 4.75, circleRadius1, circleRadius1);
+        fill(transitionColorSmall);
+        ellipse(width / 6.5, (height / 4.75) * 3.75, circleRadius2, circleRadius2);
+        fill(transitionColorSmall);
+        ellipse( (width / 6.5) * 5.5, (height / 4.75) * 3.75, circleRadius3, circleRadius3 );
+        fill(transitionColorSmall);
+        ellipse((width / 6.5) * 5.5, height / 4.75, circleRadius4, circleRadius4);
+        hexagon(width/2, height/2,transitionColorBig, circleRadiusBig/275);
+    }
+    if (fadeOutFlag === true) {
+        console.log('transition over')
+        targetMode()
+    }
+}
+
 function logo() {
     background(0);
-    hexagon(width/2, height/2, 255);
+    hexagon(width/2, height/2, 255, circleRadiusBig/275);
     fill(0);
     textSize(80);
     textAlign(CENTER, CENTER);
@@ -146,7 +214,6 @@ function logo() {
     textAlign(CENTER, CENTER);
     text("press to play", width / 2, height / 2 + 100);
 }
-
 function uiTitleText(modeText){
     fill(100)
     textAlign(CENTER, CENTER);
@@ -191,7 +258,7 @@ function menu() {
     ellipse( (width / 6.5) * 5.5, (height / 4.75) * 3.75, circleRadius3, circleRadius3 );
     fill(selectedMode === 4 ? 255 : 100)
     ellipse((width / 6.5) * 5.5, height / 4.75, circleRadius4, circleRadius4);
-    hexagon(width/2, height/2, 255);
+    hexagon(width/2, height/2, 255, circleRadiusBig/275);
 
 	//menu texts
 	fill(0);
@@ -211,13 +278,9 @@ function menu() {
 function mode1() {
     background(0);
     drawPunchingBags(circleColor1, circleColor2, circleColor3, circleColor4, circleColorBig);
-    hexagon(width/2, height/2, circleColorBig)
-
-    // fill(0);
-    // textSize(circleRadiusBig / 7);
-	// textAlign(CENTER, CENTER);
-	// text("Free Punch", width / 2, height / 2 );
-
+    // hexagon(width/2, height/2, circleColorBig)
+    uiBackButton("Back to Mode Select")
+    uiTitleText("Free Punch")
 }
 function mode2() {
     background(0);
@@ -363,23 +426,16 @@ function mode2() {
     circleColor4 = color(0)
     circleColorBig = color(0)
 
+    uiBackButton("Back to Mode Select")
+    uiTitleText("Reflex Test")
  
-
-    // fill(255);
-    // textSize(75);
-    // textAlign(CENTER, CENTER);
-    // text("Reflex Mode", width / 2, height / 8);
 }
 function mode3() {
-    // console.log('mode 3')
-    // initModeAnimation()
     background(0);
     hexagon(width/2, height/2, circleColorBig)
 
-    // fill(0);
-    // textSize(circleRadiusBig / 7);
-	// textAlign(CENTER, CENTER);
-	// text("Not done yet", width / 2, height / 2 );
+    uiBackButton("Back to Mode Select")
+    uiTitleText("Not Implemented yet :(")
 }
 function mode4() {
     background(0);
@@ -391,17 +447,15 @@ function mode4() {
 	textSize(circleRadius3 / 4);
 	text("Exit", (width / 6.5) * 5.5, (height / 4.75) * 3.75);
 
-    // fill(0);
-    // textSize(circleRadiusBig / 7);
-	// textAlign(CENTER, CENTER);
-	// text("How to Exit", width / 2, height / 2 );
+    uiBackButton("Back to Mode Select")
+    uiTitleText("Exit Test")
 }
 
-function hexagon(centerX, centerY, fillColor) {
+function hexagon(centerX, centerY, fillColor, hexagonScale) {
     fill(fillColor)
     push();
     translate(centerX, centerY);
-    scale(circleRadiusBig/275);
+    scale(hexagonScale);
     beginShape();
       vertex(-75, -130);
       vertex(75, -130);
@@ -424,7 +478,7 @@ function drawPunchingBags(fillColor1, fillColor2, fillColor3, fillColor4, fillCo
     ellipse((width / 6.5) * 5.5, height / 4.75, circleRadius4, circleRadius4);
     // ellipse(width / 2, height / 2, circleRadiusBig, circleRadiusBig);
     fill(fillColorBig);
-    hexagon(width/2, height/2, fillColorBig);
+    hexagon(width/2, height/2, fillColorBig, circleRadiusBig/275);
 }
 
 function resetPunchingBags() {
@@ -454,10 +508,28 @@ function handleKeyPress() {
 		currentMode = 0;
 		selectedMode = 0;
 		fading = false
-		fadingTimer = 0
         reflexTimer = 0
 		console.log("Reset modes");
         returnRandomNumber()
+        hitCircle1 = false;
+        hitCircle2 = false;
+        hitCircle3 = false;
+        hitCircle4 = false;
+        hitCircleBig = false;
+        randomCircle1Test = false
+        randomCircle2Test = false   
+        randomCircle3Test = false
+        randomCircle4Test = false
+        randomCircleBigTest = false
+        randomCircleTimeout = 500
+        fadeInTimer = 0
+        fadeOutTimerSmall = 100 
+        fadeOutTimerBig = 255
+        transitionColorSmall = 0
+        fadeInFlag = false
+        fadeOutFlag = false
+        fadeOutBigCircleRadius = 1
+    transitionColorBig = 0
 	}
 
     if (currentMode === 5) {
