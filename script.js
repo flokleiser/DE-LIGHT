@@ -432,7 +432,7 @@ function mode2() {
 }
 function mode3() {
     background(0);
-    hexagon(width/2, height/2, circleColorBig)
+    hexagon(width/2, height/2, circleColorBig, circleRadiusBig/275)
 
     uiBackButton("Back to Mode Select")
     uiTitleText("Not Implemented yet :(")
