@@ -57,6 +57,7 @@ let randomCircleBigTest = false
 let randomCircleTimeout = 500
 
 let isAnyButtonPressed = false
+let isSpaceButtonPressed = false
 
 
 //testing variables
@@ -75,15 +76,22 @@ let fadeInFlag = false
 
 //sound tests
 let menuSelectSound
+let menuConfirmSound
 let punchSound
 let isPlayingMenuSelectSound = false;
 let isPlayingPunchSound = false;
+let isPlayingMenuConfirmSound = false;
+
+//dumb hack so that the menu sound plays only once
+let confirmSoundCounter = 0
 
 // https://www.myinstants.com/en/instant/punch-sound-86161/?utm_source=copy&utm_medium=share
 
 function preload() {
     // punchSound = loadSound('./components/sounds/punch_test.mp3');
     punchSound = loadSound('./components/sounds/punch_test.wav');
+    menuConfirmSound = loadSound('./components/sounds/menu_confirm2.wav');
+    menuSelectSound = loadSound('./components/sounds/menu_select.wav');
 }
 
 function setup() {
@@ -162,21 +170,40 @@ function transition(){
 }
 
 function checkButtonPress() {   
-    if (keyStates[65] || keyStates[83] || keyStates[87] || keyStates[70] || keyStates[71] || keyStates[68] || (keyStates[38] || keyStates[40] || keyStates[37] || keyStates[39] || keyStates[32] || keyStates[82] || keyStates[3])) {
-        isAnyButtonPressed = true
+    if (currentMode != 0) {
+        if (keyStates[65] || keyStates[83] || keyStates[87] || keyStates[70] || keyStates[71] || keyStates[68] || (keyStates[38] || keyStates[40] || keyStates[37] || keyStates[39] || keyStates[32] || keyStates[82] || keyStates[3])) {
+            isAnyButtonPressed = true
+        }
+        else {
+            isAnyButtonPressed = false
+        }
     }
-    else {
-        isAnyButtonPressed = false
-    }
+    if (currentMode === 0) {
+        if (keyStates[65] || keyStates[83] || keyStates[87] || keyStates[70] || keyStates[71] || keyStates[68] || (keyStates[38] || keyStates[40] || keyStates[37] || keyStates[39] || keyStates[32] || keyStates[82])) {
+            isAnyButtonPressed = true
+        }
+        else {
+            isAnyButtonPressed = false
+        }
+}
 }
 
-function playSoundOnce() {
+function playSoundOnce(soundFile) {
     if (currentMode === 1) {
         if (!isPlayingPunchSound) {
             isPlayingPunchSound = true;
-            punchSound.play();
-            punchSound.onended(() => {
+            soundFile.play();
+            soundFile.onended(() => {
                 isPlayingPunchSound = false;
+            });
+        }
+    }
+    else {
+        if (!isPlayingMenuSelectSound) {
+            isPlayingMenuSelectSound = true;
+            soundFile.play();
+            soundFile.onended(() => {
+                isPlayingMenuSelectSound = false;
             });
         }
     }
@@ -204,6 +231,11 @@ function testModeFadeIn(){
 function testModeFadeOut(targetMode){
     if (fadeOutFlag === false) {
         background(0);
+        confirmSoundCounter += 1
+        if (confirmSoundCounter <= 1) {
+            playSoundOnce(menuConfirmSound);
+            console.log('once confirm')
+        }
         if (fadeOutTimerBig > 0) {
             fadeOutTimerBig -= 3 
             fadeOutTimerSmall -= 1 
@@ -213,7 +245,6 @@ function testModeFadeOut(targetMode){
             fadeOutBigCircleRadius = 1
         }
         circleRadiusBig = circleRadiusBig + fadeOutBigCircleRadius
-        console.log(fadeOutTimerBig, fadeOutTimerSmall)
 
         // transitionColorSmall = color(100,100,100,fadeOutTimerSmall)
         transitionColorSmall = color(fadeOutTimerSmall)
@@ -272,6 +303,13 @@ function menu() {
     background(0);
 	fill(255);
 
+    checkButtonPress()
+    if (isAnyButtonPressed) {
+        playSoundOnce(menuSelectSound);
+        console.log('audio select')
+    }
+
+
     let centerTextSize = (circleRadiusBig / 2) - 50 ;
     // let selectedColor = color(0, 255, 0);
 	// drawPunchingBags();
@@ -316,7 +354,7 @@ function mode1() {
     // if (keyStates[65] || keyStates[83] || keyStates[87]) {
     checkButtonPress()
     if (isAnyButtonPressed) {
-        playSoundOnce();
+        playSoundOnce(punchSound);
         console.log('audio')
     }
 
@@ -568,7 +606,8 @@ function handleKeyPress() {
         fadeInFlag = false
         fadeOutFlag = false
         fadeOutBigCircleRadius = 1
-    transitionColorBig = 0
+        transitionColorBig = 0
+        confirmSoundCounter = 0
 	}
 
     if (currentMode === 5) {
