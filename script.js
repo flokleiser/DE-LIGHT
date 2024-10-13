@@ -56,6 +56,8 @@ let randomCircleBigTest = false
 
 let randomCircleTimeout = 500
 
+let isAnyButtonPressed = false
+
 
 //testing variables
 let fadeInTimer = 0
@@ -71,13 +73,23 @@ let fadeOutFlag = false
 let fadeInFlag = false
 
 
+//sound tests
+let menuSelectSound
+let punchSound
+let isPlayingMenuSelectSound = false;
+let isPlayingPunchSound = false;
 
+// https://www.myinstants.com/en/instant/punch-sound-86161/?utm_source=copy&utm_medium=share
+
+function preload() {
+    // punchSound = loadSound('./components/sounds/punch_test.mp3');
+    punchSound = loadSound('./components/sounds/punch_test.wav');
+}
 
 function setup() {
     createCanvas(1120, 865);
     returnRandomNumber();
     console.log(randomNumber)
-
 
     //eventlisteners for mouse click
     canvas.addEventListener("contextmenu", (e) => {
@@ -149,6 +161,27 @@ function draw() {
 function transition(){
 }
 
+function checkButtonPress() {   
+    if (keyStates[65] || keyStates[83] || keyStates[87] || keyStates[70] || keyStates[71] || keyStates[68] || (keyStates[38] || keyStates[40] || keyStates[37] || keyStates[39] || keyStates[32] || keyStates[82] || keyStates[3])) {
+        isAnyButtonPressed = true
+    }
+    else {
+        isAnyButtonPressed = false
+    }
+}
+
+function playSoundOnce() {
+    if (currentMode === 1) {
+        if (!isPlayingPunchSound) {
+            isPlayingPunchSound = true;
+            punchSound.play();
+            punchSound.onended(() => {
+                isPlayingPunchSound = false;
+            });
+        }
+    }
+}
+
 function testModeFadeIn(){
     background(0);
     if (fadeInTimer < 255) {
@@ -198,7 +231,6 @@ function testModeFadeOut(targetMode){
         hexagon(width/2, height/2,transitionColorBig, circleRadiusBig/275);
     }
     if (fadeOutFlag === true) {
-        console.log('transition over')
         targetMode()
     }
 }
@@ -281,6 +313,13 @@ function mode1() {
     // hexagon(width/2, height/2, circleColorBig)
     uiBackButton("Back to Mode Select")
     uiTitleText("Free Punch")
+    // if (keyStates[65] || keyStates[83] || keyStates[87]) {
+    checkButtonPress()
+    if (isAnyButtonPressed) {
+        playSoundOnce();
+        console.log('audio')
+    }
+
 }
 function mode2() {
     background(0);

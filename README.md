@@ -10,5 +10,7 @@ ___
 - [x] reflex-mode
 - [x] Middle circle to hexagon
 
-- [ ] Ideas on how to fix transitions: 
-    - [ ] Seperate "draw mode" for transitions
+- [x] Ideas on how to fix transitions: 
+    - [x] Seperate "draw mode" for transitions
+
+- [ ] Add audio
