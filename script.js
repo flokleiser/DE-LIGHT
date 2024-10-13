@@ -1,28 +1,19 @@
-//circle 1
 let circleColor1;
 let targetColor1;
-let circleRadius1 = 250; // at 60 cm distance perfect
+let circleRadius1 = 250; 
 let targetRadius1 = 250;
-
-//circle 2
 let circleColor2;
 let targetColor2;
 let circleRadius2 = 250;
 let targetRadius2 = 250;
-
-//circle 3
 let circleColor3;
 let targetColor3;
 let circleRadius3 = 250;
 let targetRadius3 = 250;
-
-//circle 4
 let circleColor4;
 let targetColor4;
 let circleRadius4 = 250;
 let targetRadius4 = 250;
-
-//big circle 1
 let circleColorBig;
 let targetColorBig;
 let circleRadiusBig = 525;
@@ -75,23 +66,33 @@ let fadeInFlag = false
 
 
 //sound tests
+let soundLibraryAvailable = typeof p5 !== 'undefined' && typeof p5.SoundFile !== 'undefined';
+
+
 let menuSelectSound
 let menuConfirmSound
 let punchSound
+let successSound
+let failSound
+
 let isPlayingMenuSelectSound = false;
 let isPlayingPunchSound = false;
 let isPlayingMenuConfirmSound = false;
+let isPlayingSuccessSound = false;
+let isPlayingFailSound = false;
 
 //dumb hack so that the menu sound plays only once
 let confirmSoundCounter = 0
 
-// https://www.myinstants.com/en/instant/punch-sound-86161/?utm_source=copy&utm_medium=share
 
 function preload() {
-    // punchSound = loadSound('./components/sounds/punch_test.mp3');
-    punchSound = loadSound('./components/sounds/punch_test.wav');
-    menuConfirmSound = loadSound('./components/sounds/menu_confirm2.wav');
-    menuSelectSound = loadSound('./components/sounds/menu_select.wav');
+    if (soundLibraryAvailable) {
+        punchSound = loadSound('./components/sounds/punch_test.wav');
+        menuConfirmSound = loadSound('./components/sounds/menu_confirm2.wav');
+        menuSelectSound = loadSound('./components/sounds/menu_select.wav');
+        successSound = loadSound('./components/sounds/success.wav');
+        failSound = loadSound('./components/sounds/fail.wav');
+    }
 }
 
 function setup() {
@@ -147,16 +148,12 @@ function draw() {
         uiBackButton("Back")
         uiTitleText("Mode Select")
     } else if (currentMode === 1) {
-		// mode1();
         testModeFadeOut(mode1);
     } else if (currentMode === 2) {
-		// mode2();
         testModeFadeOut(mode2);
     } else if (currentMode === 3) {
-		// mode3();
         testModeFadeOut(mode3)
 	} else if (currentMode === 4) {
-		// mode4();
         testModeFadeOut(mode4)
 	} else if (currentMode === 5) {
         logo();
@@ -164,11 +161,6 @@ function draw() {
 }
 
 //different modes
-
-//todo: transition function
-function transition(){
-}
-
 function checkButtonPress() {   
     if (currentMode != 0) {
         if (keyStates[65] || keyStates[83] || keyStates[87] || keyStates[70] || keyStates[71] || keyStates[68] || (keyStates[38] || keyStates[40] || keyStates[37] || keyStates[39] || keyStates[32] || keyStates[82] || keyStates[3])) {
@@ -189,22 +181,24 @@ function checkButtonPress() {
 }
 
 function playSoundOnce(soundFile) {
-    if (currentMode === 1) {
-        if (!isPlayingPunchSound) {
-            isPlayingPunchSound = true;
-            soundFile.play();
-            soundFile.onended(() => {
-                isPlayingPunchSound = false;
-            });
+    if (soundLibraryAvailable && soundFile && typeof soundFile.play === 'function') {
+        if (currentMode != 0) {
+            if (!isPlayingPunchSound) {
+                isPlayingPunchSound = true;
+                soundFile.play();
+                soundFile.onended(() => {
+                    isPlayingPunchSound = false;
+                });
+            }
         }
-    }
-    else {
-        if (!isPlayingMenuSelectSound) {
-            isPlayingMenuSelectSound = true;
-            soundFile.play();
-            soundFile.onended(() => {
-                isPlayingMenuSelectSound = false;
-            });
+        else {
+            if (!isPlayingMenuSelectSound) {
+                isPlayingMenuSelectSound = true;
+                soundFile.play();
+                soundFile.onended(() => {
+                    isPlayingMenuSelectSound = false;
+                });
+            }
         }
     }
 }
@@ -357,12 +351,19 @@ function mode1() {
         playSoundOnce(punchSound);
         console.log('audio')
     }
-
 }
 function mode2() {
+    //weird lag, probably needs to be fixed
     background(0);
     reflexTimer += 1;
-    console.log(reflexTimer);
+    // console.log(reflexTimer);
+
+    let timeOutNumber = 150 
+
+    checkButtonPress()
+    if (isAnyButtonPressed) {
+        playSoundOnce(punchSound);
+    }
 
     circleColor1 = color(0);
     circleColor2 = color(0);
@@ -374,26 +375,26 @@ function mode2() {
 
     if (randomNumber < 1) {
         randomCircle1Test = true, randomCircle2Test = false, randomCircle3Test = false, randomCircle4Test = false, randomCircleBigTest = false;
-        console.log('case 1');
+        // console.log('case 1');
     }
     if (randomNumber > 1 && randomNumber < 2) {
         randomCircle1Test = false, randomCircle2Test = true, randomCircle3Test = false, randomCircle4Test = false, randomCircleBigTest = false;
-        console.log('case 2');
+        // console.log('case 2');
     }
     if (randomNumber > 2 && randomNumber < 3) {
         randomCircle1Test = false, randomCircle2Test = false, randomCircle3Test = true, randomCircle4Test = false, randomCircleBigTest = false;
-        console.log('case 3');
+        // console.log('case 3');
     }
     if (randomNumber > 3 && randomNumber < 4) {
         randomCircle1Test = false, randomCircle2Test = false, randomCircle3Test = false, randomCircle4Test = true, randomCircleBigTest = false;
-        console.log('case 4');
+        // console.log('case 4');
     }
     if (randomNumber > 4 && randomNumber < 5) {
         randomCircle1Test = false, randomCircle2Test = false, randomCircle3Test = false, randomCircle4Test = false, randomCircleBigTest = true;
-        console.log('case 5');
+        // console.log('case 5');
     }
 
-    if (reflexTimer > 100) {
+    if (reflexTimer > 50) {
         if (randomCircle1Test) {
             circleColor1 = hitCircle1 ? color(0, 255, 0) : color(255);
             drawPunchingBags(circleColor1, circleColor2, circleColor3, circleColor4, circleColorBig);
@@ -403,13 +404,14 @@ function mode2() {
                 circleColor1 = color(0, 255, 0);
                 drawPunchingBags(circleColor1, circleColor2, circleColor3, circleColor4, circleColorBig);
             }
-            if (reflexTimer > 200) {
+            if (reflexTimer > 100) {
                 hitCircle1 = false;
                 reflexTimer = 0;
                 returnRandomNumber();
             }
-            if (reflexTimer > 175 && !hitCircle1) {
+            if (reflexTimer > timeOutNumber - 25 && !hitCircle1) {
                 circleColor1 = color(255, 0, 0);
+                playSoundOnce(failSound);
                 drawPunchingBags(circleColor1, circleColor2, circleColor3, circleColor4, circleColorBig);
             }
         }
@@ -422,13 +424,14 @@ function mode2() {
                 circleColor2 = color(0, 255, 0);
                 drawPunchingBags(circleColor1, circleColor2, circleColor3, circleColor4, circleColorBig);
             }
-            if (reflexTimer > 200) {
+            if (reflexTimer > timeOutNumber) {
                 hitCircle2 = false;
                 reflexTimer = 0;
                 returnRandomNumber();
             }
-            if (reflexTimer > 175 && !hitCircle2) {
+            if (reflexTimer > timeOutNumber - 25 && !hitCircle2) {
                 circleColor2 = color(255, 0, 0);
+                playSoundOnce(failSound);
                 drawPunchingBags(circleColor1, circleColor2, circleColor3, circleColor4, circleColorBig);
             }
         }
@@ -441,13 +444,14 @@ function mode2() {
                 circleColor3 = color(0, 255, 0);
                 drawPunchingBags(circleColor1, circleColor2, circleColor3, circleColor4, circleColorBig);
             }
-            if (reflexTimer > 200) {
+            if (reflexTimer > timeOutNumber) {
                 hitCircle3 = false;
                 reflexTimer = 0;
                 returnRandomNumber();
             }
-            if (reflexTimer > 175 && !hitCircle3) {
+            if (reflexTimer > timeOutNumber - 25 && !hitCircle3) {
                 circleColor3 = color(255, 0, 0);
+                playSoundOnce(failSound);  
                 drawPunchingBags(circleColor1, circleColor2, circleColor3, circleColor4, circleColorBig);
             }
         }
@@ -460,13 +464,14 @@ function mode2() {
                 circleColor4 = color(0, 255, 0);
                 drawPunchingBags(circleColor1, circleColor2, circleColor3, circleColor4, circleColorBig);
             }
-            if (reflexTimer > 200) {
+            if (reflexTimer > timeOutNumber) {
                 hitCircle4 = false;
                 reflexTimer = 0;
                 returnRandomNumber();
             }
-            if (reflexTimer > 175 && !hitCircle4) {
+            if (reflexTimer > timeOutNumber - 25 && !hitCircle4) {
                 circleColor4 = color(255, 0, 0);
+                playSoundOnce(failSound);
                 drawPunchingBags(circleColor1, circleColor2, circleColor3, circleColor4, circleColorBig);
             }
         }
@@ -479,20 +484,20 @@ function mode2() {
                 circleColorBig = color(0, 255, 0);
                 drawPunchingBags(circleColor1, circleColor2, circleColor3, circleColor4, circleColorBig);
             }
-            if (reflexTimer > 200) {
+            if (reflexTimer > timeOutNumber) {
                 hitCircleBig = false;
                 reflexTimer = 0;
                 returnRandomNumber();
             }
-            if (reflexTimer > 175 && !hitCircleBig) {
+            if (reflexTimer > timeOutNumber - 25&& !hitCircleBig) {
                 circleColorBig = color(255, 0, 0);
+                playSoundOnce(failSound);
                 drawPunchingBags(circleColor1, circleColor2, circleColor3, circleColor4, circleColorBig);
             }
         }
     }
 
     if (reflexTimer > 200) {
-
         reflexTimer = 0
         returnRandomNumber()
     }
@@ -513,6 +518,12 @@ function mode3() {
 
     uiBackButton("Back to Mode Select")
     uiTitleText("Not Implemented yet :(")
+
+    checkButtonPress()
+    if (isAnyButtonPressed) {
+        playSoundOnce(punchSound);
+        console.log('audio')
+    }
 }
 function mode4() {
     background(0);
@@ -526,6 +537,12 @@ function mode4() {
 
     uiBackButton("Back to Mode Select")
     uiTitleText("Exit Test")
+    
+    checkButtonPress()
+    if (isAnyButtonPressed) {
+        playSoundOnce(punchSound);
+        console.log('audio')
+    }
 }
 
 function hexagon(centerX, centerY, fillColor, hexagonScale) {
