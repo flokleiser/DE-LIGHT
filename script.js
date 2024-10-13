@@ -1,3 +1,6 @@
+//todo: add reset() function with currentMode parameter, to reload the page
+
+
 let circleColor1;
 let targetColor1;
 let circleRadius1 = 250; 
@@ -95,7 +98,23 @@ function preload() {
     }
 }
 
+function reloadWindow(mode) {
+    if (mode !== undefined) {
+        window.location.href = `${window.location.pathname}?mode=${mode}`;
+        console.log('window reloaded')
+    } else {
+        window.location.reload();
+    }
+}
+
 function setup() {
+    const urlParams = new URLSearchParams(window.location.search);
+    const modeParam = urlParams.get('mode');
+    
+    if (modeParam !== null) {
+        currentMode = parseInt(modeParam, 10);
+    }
+
     createCanvas(1120, 865);
     returnRandomNumber();
     console.log(randomNumber)
@@ -356,7 +375,6 @@ function mode2() {
     //weird lag, probably needs to be fixed
     background(0);
     reflexTimer += 1;
-    // console.log(reflexTimer);
 
     let timeOutNumber = 150 
 
@@ -487,6 +505,8 @@ function mode2() {
             if (reflexTimer > timeOutNumber) {
                 hitCircleBig = false;
                 reflexTimer = 0;
+                // reloadWindow(2)
+                console.log('window should reload')
                 returnRandomNumber();
             }
             if (reflexTimer > timeOutNumber - 25&& !hitCircleBig) {
@@ -497,9 +517,11 @@ function mode2() {
         }
     }
 
-    if (reflexTimer > 200) {
+    if (reflexTimer > timeOutNumber) {
         reflexTimer = 0
         returnRandomNumber()
+        // reloadWindow(2)
+        // console.log('window should reload')
     }
 
     circleColor1 = color(0)
