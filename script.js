@@ -1,4 +1,4 @@
-//todo: add reset() function with currentMode parameter, to reload the page
+//to-do: add reset() function with currentMode parameter, to reload the page
 let circleColor1;
 let targetColor1;
 let circleRadius1 = 250; 
@@ -27,7 +27,7 @@ let keyStates = {};
 let randomNumberGenerated= false
 
 //without logo
-let currentMode = 4;
+let currentMode = 0;
 //with logo
 // let currentMode = 3;
 let selectedMode = 0
@@ -233,8 +233,6 @@ function menu() {
 
 
     let centerTextSize = (circleRadiusBig / 2) - 50 ;
-    // let selectedColor = color(0, 255, 0);
-	// drawPunchingBags();
     switch (selectedMode) {
         case 1: circleRadius1 = circleRadius1 + 30; break;
         case 2: circleRadius2 = circleRadius2 + 30; break;
@@ -268,7 +266,7 @@ function menu() {
 	textSize(circleRadius4 / 4);
     image(iconSpeed, width/6.5 * 5.5, height / 4.75, circleRadius4, circleRadius4)   
 }
-//to-do: mode -->
+
 function mode1() {
     background(0);
     drawPunchingBags(circleColor1, circleColor2, circleColor3, circleColor4, circleColorBig);
@@ -277,7 +275,6 @@ function mode1() {
         playSoundOnce(punchSound);
     }
 }
-//speed / reflex mode
 function mode2() {
     //weird lag, probably needs to be fixed
     background(0);
@@ -443,43 +440,59 @@ function mode2() {
 }
 //to-do --> color coordination mode --> 
 function mode3() {
+    // let cyanCircle = 'A'||'W'||'S';
+    // let purpleCircle= 'F'||'G'||'D'; 
+    // let redCircle = 'up'||'down'||'left';
+    // let greenCircle = 'F'; 
+    let cyanCircle = ['A'.charCodeAt(0), 'W'.charCodeAt(0), 'S'.charCodeAt(0)];
+    let purpleCircle = ['F'.charCodeAt(0), 'G'.charCodeAt(0), 'D'.charCodeAt(0)];
+    let redCircle = [38, 40, 37]; // up, down, left arrow keys
+    let greenCircle = ['R'.charCodeAt(0), 32, 82];
+
+
     background(0);
 
     let correctCircle
-    if ( randomNumberWord === 0) {
+    if (randomNumberWord === 0) {
         correctCircle = purpleCircle
+    } else if (randomNumberWord === 1) {
+        correctCircle = cyanCircle
+    } else if (randomNumberWord === 2) {
+        correctCircle = redCircle
+    } else if (randomNumberWord === 3) {
+        correctCircle = greenCircle
     }
+
+    console.log(`Press ${correctCircle} for the correct circle`);
+
+
 
     checkButtonPress()
     if (isAnyButtonPressed) {
         playSoundOnce(punchSound);
-
-        if (keyStates[65] || keyStates[83] || keyStates[87]) {
+        let correctKeyPressed = correctCircle.some(code => keyStates[code]);
+        if (correctKeyPressed) {
+            console.log('Correct button pressed');
+            // Add logic for correct button press
+        } else {
+            console.log('Incorrect button pressed');
+            // Add logic for incorrect button press
         }
-        if(keyStates[70] || keyStates[71] || keyStates[68]) {
-        }
-        if (keyStates[38] || keyStates[40] || keyStates[37]) {
-        }
-        if (keyStates[39] || keyStates[32] || keyStates[82]) {
-
-        }
-
         randomWordAndColorSwitch = true;
     }
     // drawPunchingBags(color('#9ce9f3'), color('#8a0cf3'), color('#f3160c'), color('#75f30c'), color(100,100,100,50));
     fill('#9ce9f3');
-    let cyanCircle = ellipse(width / 6.5, height / 4.75, circleRadius1, circleRadius1);
+    ellipse(width / 6.5, height / 4.75, circleRadius1, circleRadius1);
     fill('#8a0cf3');
-    let purpleCircle = ellipse(width / 6.5, (height / 4.75) * 3.75, circleRadius2, circleRadius2);
+    ellipse(width / 6.5, (height / 4.75) * 3.75, circleRadius2, circleRadius2);
     fill('#f3160c');
-    let redCircle = ellipse( (width / 6.5) * 5.5, (height / 4.75) * 3.75, circleRadius3, circleRadius3 );
+    ellipse( (width / 6.5) * 5.5, (height / 4.75) * 3.75, circleRadius3, circleRadius3 );
     fill('#75f30c');
-    let greenCircle = ellipse((width / 6.5) * 5.5, height / 4.75, circleRadius4, circleRadius4);
+    ellipse((width / 6.5) * 5.5, height / 4.75, circleRadius4, circleRadius4);
     fill('#9ce9f3');
     hexagon(width/2, height/2, color(100,100,100,50), circleRadiusBig/275);
     randomWordAndColor()
 }
-//to-do --> progress bar mode thingy --> timer 
 function mode4() {
     successColor = color(100, 100, 100, 50);
     background(0);
@@ -605,7 +618,6 @@ function testModeFadeIn(){
     if (fadeInTimer < 255) {
         fadeInTimer += 5 
     } 
-    console.log(fadeInTimer)
     transitionColor = color(255,255,255,fadeInTimer)
 
     fill(transitionColor);
@@ -625,7 +637,6 @@ function testModeFadeOut(targetMode){
         confirmSoundCounter += 1
         if (confirmSoundCounter <= 1) {
             playSoundOnce(menuConfirmSound);
-            console.log('once confirm')
         }
         if (fadeOutTimerBig > 0) {
             fadeOutTimerBig -= 3 
@@ -666,7 +677,6 @@ function randomWordAndColor() {
         randomNumberColor = floor(random(0,4))
         randomWordAndColorSwitch = false
 
-        console.log(randomNumberColor,randomNumberWord)
         return (randomNumberColor, randomNumberWord)
     }
     
@@ -743,23 +753,17 @@ function handleKeyPress() {
 	if (currentMode === 0) {
 		if (keyStates[65] || keyStates[83] || keyStates[87]) {
 			selectedMode= 1;
-			// console.log("Mode 1");
 		} else if (keyStates[70] || keyStates[71] || keyStates[68]) {
 			selectedMode= 2;
-			// console.log("Mode 2");
 		} else if (keyStates[38] || keyStates[40] || keyStates[37]) {
 			selectedMode= 3;
-			// console.log("Mode 3");
 		} else if (keyStates[39] || keyStates[32] || keyStates[82]) {
 			selectedMode= 4;
-			// console.log("Mode 4");
 		}
 	}
 
 	if (selectedMode != 0 && keyStates[3]) {
-		// initModeAnimation();
 		currentMode = selectedMode;
-		// console.log("Selected mode: " + currentMode);
 	}
 
     //FIRST PUNCHING BAG
