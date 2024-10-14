@@ -23,7 +23,7 @@ let lerpAmount = 0.5;
 let previousKey = null;
 let keyStates = {};
 let randomNumberGenerated= false
-let currentMode = 0;
+let currentMode = 5;
 let selectedMode = 0
 let reflexTimer = 0
 let hitCircle1 = false;
@@ -72,6 +72,9 @@ let randomWordAndColorSwitch = true
 let randomNumberWord;
 let randomNumberColor
 
+let logoImage
+let logoImageScale = 0.65 
+
 
 function preload() {
     if (soundLibraryAvailable) {
@@ -85,6 +88,8 @@ function preload() {
     iconGrowing = loadImage('./components/images/Icons_Growing.png');   
     iconReaction = loadImage('./components/images/Icons_Reactions.png'); 
     iconColor = loadImage('./components/images/Icons_Color-Coordination.png');
+    logoImage = loadImage('./components/images/Logo.png');
+    logoTitleImage = loadImage('./components/images/LogoTitle.png');
 }
 function setup() {
     const urlParams = new URLSearchParams(window.location.search);
@@ -95,8 +100,9 @@ function setup() {
     }
 
     createCanvas(1120, 865);
+    // createCanvas(1120, 865, WEBGL);
     returnRandomNumber();
-    console.log(randomNumber)
+    // console.log(randomNumber)
 
     //eventlisteners for mouse click
     canvas.addEventListener("contextmenu", (e) => {
@@ -160,14 +166,19 @@ function draw() {
 //different modes
 function logo() {
     background(0);
-    hexagon(width/2, height/2, 255, circleRadiusBig/275);
-    fill(0);
-    textSize(80);
-    textAlign(CENTER, CENTER);
-    text("(LOGO)", width / 2, height / 2 - 100);
-    textSize(50);
-    textAlign(CENTER, CENTER);
-    text("press to play", width / 2, height / 2 + 100);
+    imageMode(CENTER)
+    // image(logoImage, width / 2, height / 2, logoImage.width, logoImage.height);
+    image(logoTitleImage, width / 2, height / 2, logoTitleImage.width*logoImageScale, logoTitleImage.height*logoImageScale);
+    logoHexagon(width/2, height/2, circleRadiusBig/275);
+
+
+    // fill(0);
+    // textSize(80);
+    // textAlign(CENTER, CENTER);
+    // text("(LOGO)", width / 2, height / 2 - 100);
+    // textSize(50);
+    // textAlign(CENTER, CENTER);
+    // text("press to play", width / 2, height / 2 + 100);
 }
 function menu() {
     background(0);
@@ -520,6 +531,21 @@ function uiBackButton(uiBackButtonText) {
 }
 function hexagon(centerX, centerY, fillColor, hexagonScale) {
     fill(fillColor)
+    push();
+    translate(centerX, centerY);
+    scale(hexagonScale);
+    beginShape();
+      vertex(-75, -130);
+      vertex(75, -130);
+      vertex(150, 0);
+      vertex(75, 130);
+    vertex(-75, 130);
+      vertex(-150, 0);
+      endShape(CLOSE); 
+      pop();
+}
+function logoHexagon(centerX, centerY, hexagonScale) {
+    fill(255,255,255,40)
     push();
     translate(centerX, centerY);
     scale(hexagonScale);
