@@ -19,40 +19,26 @@ let circleColorBig;
 let targetColorBig;
 let circleRadiusBig = 525;
 let targetRadiusBig = 525;
-
 let lerpAmount = 0.5;
 let previousKey = null;
 let keyStates = {};
-
 let randomNumberGenerated= false
-
-//without logo
 let currentMode = 0;
-//with logo
-// let currentMode = 3;
 let selectedMode = 0
 let reflexTimer = 0
-
-//checking if circles were hit
 let hitCircle1 = false;
 let hitCircle2 = false;
 let hitCircle3 = false;
 let hitCircle4 = false;
 let hitCircleBig = false;
-
 let randomCircle1Test = false
 let randomCircle2Test = false   
 let randomCircle3Test = false
 let randomCircle4Test = false
 let randomCircleBigTest = false
-
 let randomCircleTimeout = 500
-
 let isAnyButtonPressed = false
 let isSpaceButtonPressed = false
-
-
-//testing variables
 let fadeInTimer = 0
 let fadeOutTimerSmall = 100 
 let fadeOutTimerBig = 255
@@ -60,27 +46,21 @@ let transitionColor = 0
 let transitionColorSmall = 0
 let transitionColorBig = 0
 let fadeOutBigCircleRadius = 1
-
 let fadeOutFlag = false
 let fadeInFlag = false
 
-
 //sound tests
 let soundLibraryAvailable = typeof p5 !== 'undefined' && typeof p5.SoundFile !== 'undefined';
-
 let menuSelectSound
 let menuConfirmSound
 let punchSound
 let successSound
 let failSound
-
 let isPlayingMenuSelectSound = false;
 let isPlayingPunchSound = false;
 let isPlayingMenuConfirmSound = false;
 let isPlayingSuccessSound = false;
 let isPlayingFailSound = false;
-
-//dumb hack so that the menu sound plays only once
 let confirmSoundCounter = 0
 
 //mode 4 variables
@@ -106,16 +86,6 @@ function preload() {
     iconReaction = loadImage('./components/images/Icons_Reactions.png'); 
     iconColor = loadImage('./components/images/Icons_Color-Coordination.png');
 }
-
-function reloadWindow(mode) {
-    if (mode !== undefined) {
-        window.location.href = `${window.location.pathname}?mode=${mode}`;
-        console.log('window reloaded')
-    } else {
-        window.location.reload();
-    }
-}
-
 function setup() {
     const urlParams = new URLSearchParams(window.location.search);
     const modeParam = urlParams.get('mode');
@@ -156,7 +126,6 @@ function setup() {
     circleColorBig = color(255);
     targetColorBig = color(255);
 }
-
 function draw() {
     handleKeyPress();
 
@@ -199,28 +168,6 @@ function logo() {
     textSize(50);
     textAlign(CENTER, CENTER);
     text("press to play", width / 2, height / 2 + 100);
-}
-function uiTitleText(modeText){
-    fill(100)
-    textAlign(CENTER, CENTER);
-    textSize(50);
-    text(modeText, width/2, height/12)
-}
-function uiBackButton(uiBackButtonText) {
-    let point1 = createVector(width/2.6, height/15*14)
-    let point2 = createVector(width/2.6*1.6, height/15*14)
-    stroke(100)
-    strokeWeight(5)
-    line(point1.x, point1.y, point2.x, point2.y)
-    line(point1.x, point1.y, point1.x - 50, point1.y - 30)
-    line(point2.x, point2.y, point2.x + 50, point2.y - 30)
-    strokeWeight(0)
-    stroke(0)
-    // fill(255,255,255,75)
-    fill(100)
-    textAlign(CENTER, CENTER);
-    textSize(25);
-    text(uiBackButtonText, width/2, height/15*14 - 25)
 }
 function menu() {
     background(0);
@@ -266,7 +213,6 @@ function menu() {
 	textSize(circleRadius4 / 4);
     image(iconSpeed, width/6.5 * 5.5, height / 4.75, circleRadius4, circleRadius4)   
 }
-
 function mode1() {
     background(0);
     drawPunchingBags(circleColor1, circleColor2, circleColor3, circleColor4, circleColorBig);
@@ -434,21 +380,15 @@ function mode2() {
     circleColor4 = color(0)
     circleColorBig = color(0)
 
-    uiBackButton("Back to Mode Select")
-    uiTitleText("Reflex Test")
+    // uiBackButton("Back to Mode Select")
+    // uiTitleText("Reflex Test")
  
 }
-//to-do --> color coordination mode --> 
 function mode3() {
-    // let cyanCircle = 'A'||'W'||'S';
-    // let purpleCircle= 'F'||'G'||'D'; 
-    // let redCircle = 'up'||'down'||'left';
-    // let greenCircle = 'F'; 
     let cyanCircle = ['A'.charCodeAt(0), 'W'.charCodeAt(0), 'S'.charCodeAt(0)];
     let purpleCircle = ['F'.charCodeAt(0), 'G'.charCodeAt(0), 'D'.charCodeAt(0)];
-    let redCircle = [38, 40, 37]; // up, down, left arrow keys
-    let greenCircle = ['R'.charCodeAt(0), 32, 82];
-
+    let redCircle = [38, 40, 37];
+    let greenCircle = ['R'.charCodeAt(0), 32, 39];
 
     background(0);
 
@@ -465,22 +405,19 @@ function mode3() {
 
     console.log(`Press ${correctCircle} for the correct circle`);
 
-
-
     checkButtonPress()
     if (isAnyButtonPressed) {
         playSoundOnce(punchSound);
         let correctKeyPressed = correctCircle.some(code => keyStates[code]);
         if (correctKeyPressed) {
             console.log('Correct button pressed');
-            // Add logic for correct button press
+            playSoundOnceFailOrSuccess(successSound);
         } else {
             console.log('Incorrect button pressed');
-            // Add logic for incorrect button press
+            playSoundOnceFailOrSuccess(failSound);
         }
         randomWordAndColorSwitch = true;
     }
-    // drawPunchingBags(color('#9ce9f3'), color('#8a0cf3'), color('#f3160c'), color('#75f30c'), color(100,100,100,50));
     fill('#9ce9f3');
     ellipse(width / 6.5, height / 4.75, circleRadius1, circleRadius1);
     fill('#8a0cf3');
@@ -491,7 +428,9 @@ function mode3() {
     ellipse((width / 6.5) * 5.5, height / 4.75, circleRadius4, circleRadius4);
     fill('#9ce9f3');
     hexagon(width/2, height/2, color(100,100,100,50), circleRadiusBig/275);
+
     randomWordAndColor()
+
 }
 function mode4() {
     successColor = color(100, 100, 100, 50);
@@ -536,6 +475,8 @@ function mode4() {
         successColor = color(0,255,0,50)
         drawPunchingBags(color(100), color(100), color(100), color(100), successColor);
 
+        playSoundOnce(successSound);
+
         if (keyStates[3]) {
             punchProgress = 0
             timeString = 0
@@ -544,6 +485,38 @@ function mode4() {
         }
     }
 
+}
+
+//helper functions
+function reloadWindow(mode) {
+    if (mode !== undefined) {
+        window.location.href = `${window.location.pathname}?mode=${mode}`;
+        console.log('window reloaded')
+    } else {
+        window.location.reload();
+    }
+}
+function uiTitleText(modeText){
+    fill(100)
+    textAlign(CENTER, CENTER);
+    textSize(50);
+    text(modeText, width/2, height/12)
+}
+function uiBackButton(uiBackButtonText) {
+    let point1 = createVector(width/2.6, height/15*14)
+    let point2 = createVector(width/2.6*1.6, height/15*14)
+    stroke(100)
+    strokeWeight(5)
+    line(point1.x, point1.y, point2.x, point2.y)
+    line(point1.x, point1.y, point1.x - 50, point1.y - 30)
+    line(point2.x, point2.y, point2.x + 50, point2.y - 30)
+    strokeWeight(0)
+    stroke(0)
+    // fill(255,255,255,75)
+    fill(100)
+    textAlign(CENTER, CENTER);
+    textSize(25);
+    text(uiBackButtonText, width/2, height/15*14 - 25)
 }
 function hexagon(centerX, centerY, fillColor, hexagonScale) {
     fill(fillColor)
@@ -613,6 +586,24 @@ function playSoundOnce(soundFile) {
         }
     }
 }
+function playSoundOnceFailOrSuccess(soundFile) {
+    if (soundLibraryAvailable && soundFile && typeof soundFile.play === 'function') {
+        if (!isPlayingSuccessSound) {
+            isPlayingSuccessSound= true;
+            soundFile.play();
+            soundFile.onended(() => {
+                isPlayingSuccessSound= false;
+            });
+        }
+        if (!isPlayingFailSound) {
+            isPlayingFailSound= true;
+            soundFile.play();
+            soundFile.onended(() => {
+                isPlayingFailSound= false;
+            });
+        }
+    }
+}
 function testModeFadeIn(){
     background(0);
     if (fadeInTimer < 255) {
@@ -673,8 +664,8 @@ function randomWordAndColor() {
     let randomColorArray = [color('#9ce9f3'), color('#8a0cf3'), color('#f3160c'), color('#75f30c')]
 
     if (randomWordAndColorSwitch === true) {   
-        randomNumberWord = floor(random(0,4))
-        randomNumberColor = floor(random(0,4))
+        randomNumberWord = floor(random(0,3))
+        randomNumberColor = floor(random(0,3))
         randomWordAndColorSwitch = false
 
         return (randomNumberColor, randomNumberWord)
