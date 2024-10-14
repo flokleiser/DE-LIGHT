@@ -1,6 +1,4 @@
 //todo: add reset() function with currentMode parameter, to reload the page
-
-
 let circleColor1;
 let targetColor1;
 let circleRadius1 = 250; 
@@ -29,9 +27,9 @@ let keyStates = {};
 let randomNumberGenerated= false
 
 //without logo
-let currentMode = 0;
+// let currentMode = 0;
 //with logo
-// let currentMode = 5;
+let currentMode = 3;
 let selectedMode = 0
 let reflexTimer = 0
 
@@ -61,7 +59,6 @@ let fadeOutTimerBig = 255
 let transitionColor = 0
 let transitionColorSmall = 0
 let transitionColorBig = 0
-
 let fadeOutBigCircleRadius = 1
 
 let fadeOutFlag = false
@@ -70,7 +67,6 @@ let fadeInFlag = false
 
 //sound tests
 let soundLibraryAvailable = typeof p5 !== 'undefined' && typeof p5.SoundFile !== 'undefined';
-
 
 let menuSelectSound
 let menuConfirmSound
@@ -87,6 +83,13 @@ let isPlayingFailSound = false;
 //dumb hack so that the menu sound plays only once
 let confirmSoundCounter = 0
 
+//mode 4 variables
+let punchProgress = 0
+
+//mode 3 variables
+let randomWordAndColorSwitch = true 
+let randomNumberWord;
+let randomNumberColor
 
 function preload() {
     if (soundLibraryAvailable) {
@@ -180,105 +183,6 @@ function draw() {
 }
 
 //different modes
-function checkButtonPress() {   
-    if (currentMode != 0) {
-        if (keyStates[65] || keyStates[83] || keyStates[87] || keyStates[70] || keyStates[71] || keyStates[68] || (keyStates[38] || keyStates[40] || keyStates[37] || keyStates[39] || keyStates[32] || keyStates[82] || keyStates[3])) {
-            isAnyButtonPressed = true
-        }
-        else {
-            isAnyButtonPressed = false
-        }
-    }
-    if (currentMode === 0) {
-        if (keyStates[65] || keyStates[83] || keyStates[87] || keyStates[70] || keyStates[71] || keyStates[68] || (keyStates[38] || keyStates[40] || keyStates[37] || keyStates[39] || keyStates[32] || keyStates[82])) {
-            isAnyButtonPressed = true
-        }
-        else {
-            isAnyButtonPressed = false
-        }
-}
-}
-
-function playSoundOnce(soundFile) {
-    if (soundLibraryAvailable && soundFile && typeof soundFile.play === 'function') {
-        if (currentMode != 0) {
-            if (!isPlayingPunchSound) {
-                isPlayingPunchSound = true;
-                soundFile.play();
-                soundFile.onended(() => {
-                    isPlayingPunchSound = false;
-                });
-            }
-        }
-        else {
-            if (!isPlayingMenuSelectSound) {
-                isPlayingMenuSelectSound = true;
-                soundFile.play();
-                soundFile.onended(() => {
-                    isPlayingMenuSelectSound = false;
-                });
-            }
-        }
-    }
-}
-
-function testModeFadeIn(){
-    background(0);
-    if (fadeInTimer < 255) {
-        fadeInTimer += 5 
-    } 
-    console.log(fadeInTimer)
-    transitionColor = color(255,255,255,fadeInTimer)
-
-    fill(transitionColor);
-    ellipse(width / 6.5, height / 4.75, circleRadius1, circleRadius1);
-    fill(transitionColor);
-    ellipse(width / 6.5, (height / 4.75) * 3.75, circleRadius2, circleRadius2);
-    fill(transitionColor);
-    ellipse( (width / 6.5) * 5.5, (height / 4.75) * 3.75, circleRadius3, circleRadius3 );
-    fill(transitionColor);
-    ellipse((width / 6.5) * 5.5, height / 4.75, circleRadius4, circleRadius4);
-    fill(transitionColor);
-    hexagon(width/2, height/2,transitionColor, circleRadiusBig/275);
-}
-function testModeFadeOut(targetMode){
-    if (fadeOutFlag === false) {
-        background(0);
-        confirmSoundCounter += 1
-        if (confirmSoundCounter <= 1) {
-            playSoundOnce(menuConfirmSound);
-            console.log('once confirm')
-        }
-        if (fadeOutTimerBig > 0) {
-            fadeOutTimerBig -= 3 
-            fadeOutTimerSmall -= 1 
-            fadeOutBigCircleRadius += 10
-        } else {
-            fadeOutFlag = true
-            fadeOutBigCircleRadius = 1
-        }
-        circleRadiusBig = circleRadiusBig + fadeOutBigCircleRadius
-
-        // transitionColorSmall = color(100,100,100,fadeOutTimerSmall)
-        transitionColorSmall = color(fadeOutTimerSmall)
-        // transitionColorBig = color(255, 255, 255, fadeOutTimerBig);
-        transitionColorBig = color(fadeOutTimerBig);
-
-        fill(transitionColorSmall);
-        ellipse(width / 6.5, height / 4.75, circleRadius1, circleRadius1);
-        fill(transitionColorSmall);
-        ellipse(width / 6.5, (height / 4.75) * 3.75, circleRadius2, circleRadius2);
-        fill(transitionColorSmall);
-        ellipse( (width / 6.5) * 5.5, (height / 4.75) * 3.75, circleRadius3, circleRadius3 );
-        fill(transitionColorSmall);
-        ellipse((width / 6.5) * 5.5, height / 4.75, circleRadius4, circleRadius4);
-        hexagon(width/2, height/2,transitionColorBig, circleRadiusBig/275);
-    }
-    if (fadeOutFlag === true) {
-        targetMode()
-    }
-}
-
 function logo() {
     background(0);
     hexagon(width/2, height/2, 255, circleRadiusBig/275);
@@ -319,7 +223,6 @@ function menu() {
     checkButtonPress()
     if (isAnyButtonPressed) {
         playSoundOnce(menuSelectSound);
-        console.log('audio select')
     }
 
 
@@ -358,19 +261,20 @@ function menu() {
 	textSize(circleRadius4 / 4);
 	text("Mode 4", (width / 6.5) * 5.5, height / 4.75);
 }
+//timed mode
 function mode1() {
     background(0);
     drawPunchingBags(circleColor1, circleColor2, circleColor3, circleColor4, circleColorBig);
     // hexagon(width/2, height/2, circleColorBig)
-    uiBackButton("Back to Mode Select")
-    uiTitleText("Free Punch")
+    // uiBackButton("Back to Mode Select")
+    // uiTitleText("Free Punch")
     // if (keyStates[65] || keyStates[83] || keyStates[87]) {
     checkButtonPress()
     if (isAnyButtonPressed) {
         playSoundOnce(punchSound);
-        console.log('audio')
     }
 }
+//speed / reflex mode
 function mode2() {
     //weird lag, probably needs to be fixed
     background(0);
@@ -534,39 +438,74 @@ function mode2() {
     uiTitleText("Reflex Test")
  
 }
+//todo --> color coordination mode
 function mode3() {
     background(0);
-    hexagon(width/2, height/2, circleColorBig, circleRadiusBig/275)
 
-    uiBackButton("Back to Mode Select")
-    uiTitleText("Not Implemented yet :(")
+    let correctCircle
+    switch (correctCircle) {
+        case 1: randomNumberWord === 1 ? correctCircle = cyanCircle:''; break;
+        case 2: randomNumberWord === 0 ? correctCircle = purpleCircle:''; break;
+        case 3: randomNumberWord === 2 ? correctCircle = redCircle:''; break;
+        case 4: randomNumberWord === 3 ? correctCircle = greenCircle:''; break;
+    }
 
     checkButtonPress()
     if (isAnyButtonPressed) {
         playSoundOnce(punchSound);
-        console.log('audio')
+
+        if (keyStates[65] || keyStates[83] || keyStates[87]) {
+        }
+        if(keyStates[70] || keyStates[71] || keyStates[68]) {
+        }
+        if (keyStates[38] || keyStates[40] || keyStates[37]) {
+        }
+        if (keyStates[39] || keyStates[32] || keyStates[82]) {
+
+        }
+
+        randomWordAndColorSwitch = true;
     }
+    // drawPunchingBags(color('#9ce9f3'), color('#8a0cf3'), color('#f3160c'), color('#75f30c'), color(100,100,100,50));
+    fill('#9ce9f3');
+    let cyanCircle = ellipse(width / 6.5, height / 4.75, circleRadius1, circleRadius1);
+    fill('#8a0cf3');
+    let purpleCircle = ellipse(width / 6.5, (height / 4.75) * 3.75, circleRadius2, circleRadius2);
+    fill('#f3160c');
+    let redCircle = ellipse( (width / 6.5) * 5.5, (height / 4.75) * 3.75, circleRadius3, circleRadius3 );
+    fill('#75f30c');
+    let greenCircle = ellipse((width / 6.5) * 5.5, height / 4.75, circleRadius4, circleRadius4);
+    fill('#9ce9f3');
+    hexagon(width/2, height/2, color(100,100,100,50), circleRadiusBig/275);
+    randomWordAndColor()
 }
+//todo --> progress bar mode thingy --> kinda implemented but not finished
 function mode4() {
     background(0);
 	fill(255)
-	drawPunchingBags(circleColor1, circleColor2, circleColor3, circleColor4, circleColorBig);
-	fill(0)
-	textSize(circleRadius2 / 4);
-	text("Exit", width / 6.5, (height / 4.75) * 3.75);
-	textSize(circleRadius3 / 4);
-	text("Exit", (width / 6.5) * 5.5, (height / 4.75) * 3.75);
+	drawPunchingBags(color(100), color(100), color(100), color(100), color(100));
 
-    uiBackButton("Back to Mode Select")
-    uiTitleText("Exit Test")
+    fill(255);
+    ellipse(width / 2, height / 2, punchProgress, punchProgress);
     
     checkButtonPress()
     if (isAnyButtonPressed) {
+        if (keyStates[65] || keyStates[70]  || keyStates[39]) {
+            punchProgress += 1
+            console.log('+1')
+        }
+        if (keyStates[71] || keyStates[40]  || keyStates[32]){
+            punchProgress += 2 
+            console.log('+2')
+        }
+        if (keyStates[68] || keyStates[37]  || keyStates[82]){
+            punchProgress += 3 
+            console.log('+3')
+        }
+        punchProgress += 1
         playSoundOnce(punchSound);
-        console.log('audio')
     }
 }
-
 function hexagon(centerX, centerY, fillColor, hexagonScale) {
     fill(fillColor)
     push();
@@ -581,8 +520,7 @@ function hexagon(centerX, centerY, fillColor, hexagonScale) {
       vertex(-150, 0);
       endShape(CLOSE); 
       pop();
-  }
-
+}
 function drawPunchingBags(fillColor1, fillColor2, fillColor3, fillColor4, fillColorBig) {
     fill(fillColor1);
     ellipse(width / 6.5, height / 4.75, circleRadius1, circleRadius1);
@@ -595,6 +533,126 @@ function drawPunchingBags(fillColor1, fillColor2, fillColor3, fillColor4, fillCo
     // ellipse(width / 2, height / 2, circleRadiusBig, circleRadiusBig);
     fill(fillColorBig);
     hexagon(width/2, height/2, fillColorBig, circleRadiusBig/275);
+}
+function checkButtonPress() {   
+    if (currentMode != 0) {
+        if (keyStates[65] || keyStates[83] || keyStates[87] || keyStates[70] || keyStates[71] || keyStates[68] || (keyStates[38] || keyStates[40] || keyStates[37] || keyStates[39] || keyStates[32] || keyStates[82] || keyStates[3])) {
+            isAnyButtonPressed = true
+        }
+        else {
+            isAnyButtonPressed = false
+        }
+    }
+    if (currentMode === 0) {
+        if (keyStates[65] || keyStates[83] || keyStates[87] || keyStates[70] || keyStates[71] || keyStates[68] || (keyStates[38] || keyStates[40] || keyStates[37] || keyStates[39] || keyStates[32] || keyStates[82])) {
+            isAnyButtonPressed = true
+        }
+        else {
+            isAnyButtonPressed = false
+        }
+}
+}
+function playSoundOnce(soundFile) {
+    if (soundLibraryAvailable && soundFile && typeof soundFile.play === 'function') {
+        if (currentMode != 0) {
+            if (!isPlayingPunchSound) {
+                isPlayingPunchSound = true;
+                soundFile.play();
+                soundFile.onended(() => {
+                    isPlayingPunchSound = false;
+                });
+            }
+        }
+        else {
+            if (!isPlayingMenuSelectSound) {
+                isPlayingMenuSelectSound = true;
+                soundFile.play();
+                soundFile.onended(() => {
+                    isPlayingMenuSelectSound = false;
+                });
+            }
+        }
+    }
+}
+function testModeFadeIn(){
+    background(0);
+    if (fadeInTimer < 255) {
+        fadeInTimer += 5 
+    } 
+    console.log(fadeInTimer)
+    transitionColor = color(255,255,255,fadeInTimer)
+
+    fill(transitionColor);
+    ellipse(width / 6.5, height / 4.75, circleRadius1, circleRadius1);
+    fill(transitionColor);
+    ellipse(width / 6.5, (height / 4.75) * 3.75, circleRadius2, circleRadius2);
+    fill(transitionColor);
+    ellipse( (width / 6.5) * 5.5, (height / 4.75) * 3.75, circleRadius3, circleRadius3 );
+    fill(transitionColor);
+    ellipse((width / 6.5) * 5.5, height / 4.75, circleRadius4, circleRadius4);
+    fill(transitionColor);
+    hexagon(width/2, height/2,transitionColor, circleRadiusBig/275);
+}
+function testModeFadeOut(targetMode){
+    if (fadeOutFlag === false) {
+        background(0);
+        confirmSoundCounter += 1
+        if (confirmSoundCounter <= 1) {
+            playSoundOnce(menuConfirmSound);
+            console.log('once confirm')
+        }
+        if (fadeOutTimerBig > 0) {
+            fadeOutTimerBig -= 3 
+            fadeOutTimerSmall -= 1 
+            fadeOutBigCircleRadius += 10
+        } else {
+            fadeOutFlag = true
+            fadeOutBigCircleRadius = 1
+        }
+        circleRadiusBig = circleRadiusBig + fadeOutBigCircleRadius
+
+        // transitionColorSmall = color(100,100,100,fadeOutTimerSmall)
+        transitionColorSmall = color(fadeOutTimerSmall)
+        // transitionColorBig = color(255, 255, 255, fadeOutTimerBig);
+        transitionColorBig = color(fadeOutTimerBig);
+
+        fill(transitionColorSmall);
+        ellipse(width / 6.5, height / 4.75, circleRadius1, circleRadius1);
+        fill(transitionColorSmall);
+        ellipse(width / 6.5, (height / 4.75) * 3.75, circleRadius2, circleRadius2);
+        fill(transitionColorSmall);
+        ellipse( (width / 6.5) * 5.5, (height / 4.75) * 3.75, circleRadius3, circleRadius3 );
+        fill(transitionColorSmall);
+        ellipse((width / 6.5) * 5.5, height / 4.75, circleRadius4, circleRadius4);
+        hexagon(width/2, height/2,transitionColorBig, circleRadiusBig/275);
+    }
+    if (fadeOutFlag === true) {
+        targetMode()
+    }
+}
+function randomWordAndColor() {
+
+    let randomWordArray= ['Purple', 'Cyan', 'Red', 'Green']
+    let randomColorArray = [color('#9ce9f3'), color('#8a0cf3'), color('#f3160c'), color('#75f30c')]
+
+    if (randomWordAndColorSwitch === true) {   
+        randomNumberWord = floor(random(0,4))
+        randomNumberColor = floor(random(0,4))
+        randomWordAndColorSwitch = false
+
+        console.log(randomNumberColor,randomNumberWord)
+        return (randomNumberColor, randomNumberWord)
+    }
+    
+    textSize(50)
+    textAlign(CENTER, CENTER)
+    fill(randomColorArray[randomNumberColor])
+    text(randomWordArray[randomNumberWord], width / 2, height / 2)
+
+}
+function punchMeterCircle() {
+    fill(255);
+    ellipse(width / 2, height / 2, circleRadiusBig, circleRadiusBig);
 }
 
 function resetPunchingBags() {
@@ -647,6 +705,7 @@ function handleKeyPress() {
         fadeOutBigCircleRadius = 1
         transitionColorBig = 0
         confirmSoundCounter = 0
+        punchProgress = 0
 	}
 
     if (currentMode === 5) {
@@ -786,75 +845,6 @@ function handleKeyPress() {
         !keyStates[3]
     ) {
         resetPunchingBags();
-    }
-}
-
-//console.log messages, remove in final build
-if (currentMode === 1) {
-    // once circle, colored
-    if (currentKey !== previousKey) {
-        if (currentKey === "a") {
-            console.log("A --> weak punch");
-        } else if (currentKey === "s") {
-            console.log("S --> mid punch");
-        } else if (currentKey === "w") {
-            console.log("W --> strong punch");
-        } else {
-            console.log("------------------");
-        }
-        previousKey = currentKey;
-    }
-}
-if (currentMode === 2) {
-    // four circles, sized
-    if (currentKey !== previousKey) {
-        if (currentKey === "a") {
-            console.log("PunchThing 1 --> weak punch");
-        } else if (currentKey === "s") {
-            console.log("PunchThing 1 --> mid punch");
-        } else if (currentKey === "w") {
-            console.log("PunchThing 1 --> strong punch");
-        } else if (currentKey === "f") {
-            console.log("PunchThing 2 --> weak punch");
-        } else if (currentKey === "g") {
-            console.log("PunchThing 2 --> mid punch");
-        } else if (currentKey === "d") {
-            console.log("PunchThing 2 --> strong punch");
-        } else if (currentKey === "arrow up") {
-            console.log("PunchThing 3 --> weak punch");
-        } else if (currentKey === "arrow down") {
-            console.log("PunchThing 3 --> mid punch");
-        } else if (currentKey === "arrow left") {
-            console.log("PunchThing 3 --> strong punch");
-        } else if (currentKey === "arrow right") {
-            console.log("PunchThing 4 --> weak punch");
-        } else if (currentKey === "spacebar") {
-            console.log("PunchThing 4 --> mid punch");
-        } else if (currentKey === "R/mouse pressed") {
-            console.log("PunchThing 4 --> strong punch");
-        } else if (currentKey === "right-click") {
-            console.log("PunchThing Middle --> punch");
-        } else {
-            console.log("------------------");
-        }
-        previousKey = currentKey;
-    }
-}
-if (currentMode === 3) {
-    // one big one small
-    if (currentKey !== previousKey) {
-        if (currentKey === "a") {
-            console.log("PunchThing 1 --> weak punch");
-        } else if (currentKey === "s") {
-            console.log("PunchThing 1 --> mid punch");
-        } else if (currentKey === "w") {
-            console.log("PunchThing 1 --> strong punch");
-        } else if (currentKey === "d") {
-            console.log("PunchThing Big");
-        } else {
-            console.log("------------------");
-        }
-        previousKey = currentKey;
     }
 }
 
