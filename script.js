@@ -27,9 +27,9 @@ let keyStates = {};
 let randomNumberGenerated= false
 
 //without logo
-// let currentMode = 0;
+let currentMode = 4;
 //with logo
-let currentMode = 3;
+// let currentMode = 3;
 let selectedMode = 0
 let reflexTimer = 0
 
@@ -85,11 +85,13 @@ let confirmSoundCounter = 0
 
 //mode 4 variables
 let punchProgress = 0
+let punchFillTimer = 0
 
 //mode 3 variables
 let randomWordAndColorSwitch = true 
 let randomNumberWord;
 let randomNumberColor
+
 
 function preload() {
     if (soundLibraryAvailable) {
@@ -99,6 +101,10 @@ function preload() {
         successSound = loadSound('./components/sounds/success.wav');
         failSound = loadSound('./components/sounds/fail.wav');
     }
+    iconSpeed = loadImage('./components/images/Icons_Speed.png');
+    iconGrowing = loadImage('./components/images/Icons_Growing.png');   
+    iconReaction = loadImage('./components/images/Icons_Reactions.png'); 
+    iconColor = loadImage('./components/images/Icons_Color-Coordination.png');
 }
 
 function reloadWindow(mode) {
@@ -167,8 +173,8 @@ function draw() {
 
     if (currentMode === 0) {
 		menu();
-        uiBackButton("Back")
-        uiTitleText("Mode Select")
+        // uiBackButton("Back")
+        // uiTitleText("Mode Select")
     } else if (currentMode === 1) {
         testModeFadeOut(mode1);
     } else if (currentMode === 2) {
@@ -247,28 +253,25 @@ function menu() {
     hexagon(width/2, height/2, 255, circleRadiusBig/275);
 
 	//menu texts
+    imageMode(CENTER)
 	fill(0);
 	textSize(32);
 	textAlign(CENTER, CENTER);
 	textSize(centerTextSize);
 	text("▶", width / 2 + 20, height / 2 + 20);
 	textSize(circleRadius1 / 4);
-	text("Mode 1", width / 6.5, height / 4.75);
+    image(iconGrowing, width/6.5, height / 4.75, circleRadius1, circleRadius1)   
 	textSize(circleRadius2 / 4);
-	text("Mode 2", width / 6.5, (height / 4.75) * 3.75);
+    image(iconReaction, width/6.5, height / 4.75 * 3.75, circleRadius2, circleRadius2)   
 	textSize(circleRadius3 / 4);
-	text("Mode 3", (width / 6.5) * 5.5, (height / 4.75) * 3.75);
+    image(iconColor, width/6.5 * 5.5, height / 4.75 * 3.75, circleRadius3, circleRadius3)   
 	textSize(circleRadius4 / 4);
-	text("Mode 4", (width / 6.5) * 5.5, height / 4.75);
+    image(iconSpeed, width/6.5 * 5.5, height / 4.75, circleRadius4, circleRadius4)   
 }
-//timed mode
+//to-do: mode -->
 function mode1() {
     background(0);
     drawPunchingBags(circleColor1, circleColor2, circleColor3, circleColor4, circleColorBig);
-    // hexagon(width/2, height/2, circleColorBig)
-    // uiBackButton("Back to Mode Select")
-    // uiTitleText("Free Punch")
-    // if (keyStates[65] || keyStates[83] || keyStates[87]) {
     checkButtonPress()
     if (isAnyButtonPressed) {
         playSoundOnce(punchSound);
@@ -438,16 +441,13 @@ function mode2() {
     uiTitleText("Reflex Test")
  
 }
-//todo --> color coordination mode
+//to-do --> color coordination mode --> 
 function mode3() {
     background(0);
 
     let correctCircle
-    switch (correctCircle) {
-        case 1: randomNumberWord === 1 ? correctCircle = cyanCircle:''; break;
-        case 2: randomNumberWord === 0 ? correctCircle = purpleCircle:''; break;
-        case 3: randomNumberWord === 2 ? correctCircle = redCircle:''; break;
-        case 4: randomNumberWord === 3 ? correctCircle = greenCircle:''; break;
+    if ( randomNumberWord === 0) {
+        correctCircle = purpleCircle
     }
 
     checkButtonPress()
@@ -479,32 +479,58 @@ function mode3() {
     hexagon(width/2, height/2, color(100,100,100,50), circleRadiusBig/275);
     randomWordAndColor()
 }
-//todo --> progress bar mode thingy --> kinda implemented but not finished
+//to-do --> progress bar mode thingy --> timer 
 function mode4() {
+    successColor = color(100, 100, 100, 50);
     background(0);
-	fill(255)
-	drawPunchingBags(color(100), color(100), color(100), color(100), color(100));
+	// fill(255)
+	drawPunchingBags(color(100), color(100), color(100), color(100), successColor);
 
     fill(255);
     ellipse(width / 2, height / 2, punchProgress, punchProgress);
+
+    if (punchProgress < 525) {
+        punchFillTimer += 1 
+        let totalSeconds = Math.floor(punchFillTimer / 60);
+        let minutes = Math.floor(totalSeconds / 60);
+        let seconds = totalSeconds % 60;
+
+        let timeString = nf(minutes, 2) + ':' + nf(seconds, 2);
+
+        textSize(50);
+        textAlign(CENTER, CENTER);
+        // text(punchFillTimer, width / 2, height / 2 - 100);
+        text(timeString, width / 2, height / 2 - 300);
+
+    }
     
     checkButtonPress()
     if (isAnyButtonPressed) {
-        if (keyStates[65] || keyStates[70]  || keyStates[39]) {
+
+        if (keyStates[65] || keyStates[70] || keyStates[38] || keyStates[39]) {
             punchProgress += 1
-            console.log('+1')
         }
-        if (keyStates[71] || keyStates[40]  || keyStates[32]){
-            punchProgress += 2 
-            console.log('+2')
+        if (keyStates[83] || keyStates[71] || keyStates[40] || keyStates[32]) {
+            punchProgress += 1.5
         }
-        if (keyStates[68] || keyStates[37]  || keyStates[82]){
-            punchProgress += 3 
-            console.log('+3')
+        if (keyStates[87] || keyStates[68] || keyStates[37] || keyStates[82]) {
+            punchProgress += 2
         }
-        punchProgress += 1
         playSoundOnce(punchSound);
     }
+    
+    if (punchProgress > 525) {
+        successColor = color(0,255,0,50)
+        drawPunchingBags(color(100), color(100), color(100), color(100), successColor);
+
+        if (keyStates[3]) {
+            punchProgress = 0
+            timeString = 0
+            punchFillTimer = 0
+            successColor = color(100,100,100,50)
+        }
+    }
+
 }
 function hexagon(centerX, centerY, fillColor, hexagonScale) {
     fill(fillColor)
@@ -536,7 +562,7 @@ function drawPunchingBags(fillColor1, fillColor2, fillColor3, fillColor4, fillCo
 }
 function checkButtonPress() {   
     if (currentMode != 0) {
-        if (keyStates[65] || keyStates[83] || keyStates[87] || keyStates[70] || keyStates[71] || keyStates[68] || (keyStates[38] || keyStates[40] || keyStates[37] || keyStates[39] || keyStates[32] || keyStates[82] || keyStates[3])) {
+        if (keyStates[65] || keyStates[83] || keyStates[87] || keyStates[70] || keyStates[71] || keyStates[68] || keyStates[38] || keyStates[40] || keyStates[37] || keyStates[39] || keyStates[32] || keyStates[82] || keyStates[3]) {
             isAnyButtonPressed = true
         }
         else {
@@ -544,7 +570,7 @@ function checkButtonPress() {
         }
     }
     if (currentMode === 0) {
-        if (keyStates[65] || keyStates[83] || keyStates[87] || keyStates[70] || keyStates[71] || keyStates[68] || (keyStates[38] || keyStates[40] || keyStates[37] || keyStates[39] || keyStates[32] || keyStates[82])) {
+        if (keyStates[65] || keyStates[83] || keyStates[87] || keyStates[70] || keyStates[71] || keyStates[68] || keyStates[38] || keyStates[40] || keyStates[37] || keyStates[39] || keyStates[32] || keyStates[82]) {
             isAnyButtonPressed = true
         }
         else {
@@ -654,7 +680,6 @@ function punchMeterCircle() {
     fill(255);
     ellipse(width / 2, height / 2, circleRadiusBig, circleRadiusBig);
 }
-
 function resetPunchingBags() {
     targetColor1 = color(255);
     targetRadius1 = 250;
@@ -667,11 +692,11 @@ function resetPunchingBags() {
     targetRadiusBig = 525;
     targetColorBig = color(255);
 }
-
 function returnRandomNumber() {
     // return randomNumber = random(1, 5);
     return randomNumber = random(0, 5);
 }
+
 
 //key press handling
 function handleKeyPress() {
@@ -847,7 +872,6 @@ function handleKeyPress() {
         resetPunchingBags();
     }
 }
-
 // converting mouse to r
 function mousePressed() {
     if (mouseButton === LEFT) {
@@ -860,7 +884,6 @@ function mouseReleased() {
         keyStates[82] = false;
     }
 }
-
 // checking which keys are pressed
 function keyPressed() {
     keyStates[keyCode] = true;
