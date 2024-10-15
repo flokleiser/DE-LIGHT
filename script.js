@@ -75,7 +75,6 @@ let randomNumberColor
 let logoImage
 let logoImageScale = 0.65 
 
-
 function preload() {
     if (soundLibraryAvailable) {
         punchSound = loadSound('./components/sounds/punch_test.wav');
@@ -89,7 +88,9 @@ function preload() {
     iconReaction = loadImage('./components/images/Icons_Reactions.png'); 
     iconColor = loadImage('./components/images/Icons_Color-Coordination.png');
     logoImage = loadImage('./components/images/Logo.png');
-    logoTitleImage = loadImage('./components/images/LogoTitle.png');
+    // logoTitleImage = loadImage('./components/images/LogoTitle.png');
+    // logoTitleImage = loadImage('./components/images/LogoTitleNew.png');
+    logoTitleImage = loadImage('./components/images/logotestgradient.png');
 }
 function setup() {
     const urlParams = new URLSearchParams(window.location.search);
@@ -99,10 +100,11 @@ function setup() {
         currentMode = parseInt(modeParam, 10);
     }
 
-    createCanvas(1120, 865);
+    
     // createCanvas(1120, 865, WEBGL);
+    // createCanvas(1290, 865);
+    createCanvas(1380, 1035);
     returnRandomNumber();
-    // console.log(randomNumber)
 
     //eventlisteners for mouse click
     canvas.addEventListener("contextmenu", (e) => {
@@ -170,15 +172,6 @@ function logo() {
     // image(logoImage, width / 2, height / 2, logoImage.width, logoImage.height);
     image(logoTitleImage, width / 2, height / 2, logoTitleImage.width*logoImageScale, logoTitleImage.height*logoImageScale);
     logoHexagon(width/2, height/2, circleRadiusBig/275);
-
-
-    // fill(0);
-    // textSize(80);
-    // textAlign(CENTER, CENTER);
-    // text("(LOGO)", width / 2, height / 2 - 100);
-    // textSize(50);
-    // textAlign(CENTER, CENTER);
-    // text("press to play", width / 2, height / 2 + 100);
 }
 function menu() {
     background(0);
@@ -199,29 +192,29 @@ function menu() {
     }
 
     fill(selectedMode === 1 ? 255 : 100)
+    // ellipse(width / 6.5 - 50, height / 4.75, circleRadius1, circleRadius1);
     ellipse(width / 6.5, height / 4.75, circleRadius1, circleRadius1);
     fill(selectedMode === 2 ? 255 : 100)
     ellipse(width / 6.5, (height / 4.75) * 3.75, circleRadius2, circleRadius2);
+    // ellipse(width / 6.5, (height / 4.75 + 1) * 3.75, circleRadius2, circleRadius2);
     fill(selectedMode === 3 ? 255 : 100)
     ellipse( (width / 6.5) * 5.5, (height / 4.75) * 3.75, circleRadius3, circleRadius3 );
     fill(selectedMode === 4 ? 255 : 100)
     ellipse((width / 6.5) * 5.5, height / 4.75, circleRadius4, circleRadius4);
     hexagon(width/2, height/2, 255, circleRadiusBig/275);
 
-	//menu texts
     imageMode(CENTER)
-	fill(0);
+    textAlign(CENTER)
+
+    fill(0);
 	textSize(32);
 	textAlign(CENTER, CENTER);
 	textSize(centerTextSize);
 	text("▶", width / 2 + 20, height / 2 + 20);
 	textSize(circleRadius1 / 4);
     image(iconGrowing, width/6.5, height / 4.75, circleRadius1, circleRadius1)   
-	textSize(circleRadius2 / 4);
     image(iconReaction, width/6.5, height / 4.75 * 3.75, circleRadius2, circleRadius2)   
-	textSize(circleRadius3 / 4);
     image(iconColor, width/6.5 * 5.5, height / 4.75 * 3.75, circleRadius3, circleRadius3)   
-	textSize(circleRadius4 / 4);
     image(iconSpeed, width/6.5 * 5.5, height / 4.75, circleRadius4, circleRadius4)   
 }
 function mode1() {
@@ -471,13 +464,13 @@ function mode4() {
     if (isAnyButtonPressed) {
 
         if (keyStates[65] || keyStates[70] || keyStates[38] || keyStates[39]) {
-            punchProgress += 1
+            punchProgress += 3 
         }
         if (keyStates[83] || keyStates[71] || keyStates[40] || keyStates[32]) {
-            punchProgress += 1.5
+            punchProgress += 4
         }
         if (keyStates[87] || keyStates[68] || keyStates[37] || keyStates[82]) {
-            punchProgress += 2
+            punchProgress += 5 
         }
         playSoundOnce(punchSound);
     }
@@ -690,8 +683,8 @@ function randomWordAndColor() {
     let randomColorArray = [color('#9ce9f3'), color('#8a0cf3'), color('#f3160c'), color('#75f30c')]
 
     if (randomWordAndColorSwitch === true) {   
-        randomNumberWord = floor(random(0,3))
-        randomNumberColor = floor(random(0,3))
+        randomNumberWord = floor(random(0,4))
+        randomNumberColor = floor(random(0,4))
         randomWordAndColorSwitch = false
 
         return (randomNumberColor, randomNumberWord)
@@ -724,10 +717,11 @@ function returnRandomNumber() {
     return randomNumber = random(0, 5);
 }
 
-
 //key press handling
 function handleKeyPress() {
+    console.log(`Key pressed: ${key} (keyCode: ${keyCode})`);
     let currentKey = null;
+    // console.log(keyCode)
 
     //SETTING MODES
 	if (selectedMode != 0 && keyStates[48] || (keyStates[70] || keyStates[71] || keyStates[68]) && (keyStates[38] || keyStates[40] || keyStates[37])) {
@@ -893,7 +887,16 @@ function handleKeyPress() {
         resetPunchingBags();
     }
 }
-// converting mouse to r
+
+
+// checking which keys are pressed
+function keyPressed() {
+    keyStates[keyCode] = true;
+
+}
+function keyReleased() {
+    keyStates[keyCode] = false;
+}
 function mousePressed() {
     if (mouseButton === LEFT) {
         keyStates[82] = true;
@@ -905,7 +908,6 @@ function mouseReleased() {
         keyStates[82] = false;
     }
 }
-// checking which keys are pressed
 function keyPressed() {
     keyStates[keyCode] = true;
 }

@@ -1,14 +1,18 @@
 body {
     background-color: black;
+    /* cursor:hidden; */
+    overflow:hidden;
 }
 
 /* Default p5js canvas, no idea why its named like that*/
 #defaultCanvas0{ 
+    cursor: none;
+    scale: 85%;
     position:absolute;
-    top: 50%;
-    left: 50%;
+    top: 51.5%;
+    left: 40%;
     transform: translate(-50%, -50%);
-    border: 2px solid white;
+    /* border: 2px solid white; */
 }
 
 #custom-console {
